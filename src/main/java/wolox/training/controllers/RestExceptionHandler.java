@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
+import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookIdMismatchException;
 import wolox.training.exceptions.BookNotFoundException;
 
@@ -28,6 +29,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
     return handleExceptionInternal(ex, ex.getMessage(),
         new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
-
+  @ExceptionHandler({BookAlreadyOwnedException.class})
+  public ResponseEntity<Object> handleTheUserAlreadyHasThatBook(
+      Exception ex, WebRequest request) {
+    return handleExceptionInternal(ex, ex.getMessage(),
+        new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+  }
 
 }
