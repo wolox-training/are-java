@@ -8,10 +8,12 @@ import javax.persistence.Id;
 
 @Entity
 public class Book {
+
   @Id
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
 
+  @Column
   private String genre;
 
   @Column(nullable = false)
@@ -21,7 +23,7 @@ public class Book {
   private String image;
 
   @Column(nullable = false)
-  private String title ;
+  private String title;
 
   @Column(nullable = false)
   private String subtitle;
