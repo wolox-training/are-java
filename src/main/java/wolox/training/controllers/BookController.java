@@ -14,8 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import wolox.training.exceptions.BookIdMismatchException;
-import wolox.training.exceptions.BookNotFoundException;
+import wolox.training.exceptions.IdMismatchException;
+import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 
@@ -31,7 +31,7 @@ public class BookController {
   @ResponseBody
   public Book findOne(@PathVariable Long id) {
     return bookRepository.findById(id)
-        .orElseThrow(BookNotFoundException::new);
+        .orElseThrow(IdNotFoundException::new);
   }
 
   @PostMapping
@@ -45,7 +45,7 @@ public class BookController {
   @ResponseBody
   public void delete(@PathVariable Long id) {
     bookRepository.findById(id)
-        .orElseThrow(BookNotFoundException::new);
+        .orElseThrow(IdNotFoundException::new);
     bookRepository.deleteById(id);
   }
 
@@ -53,10 +53,10 @@ public class BookController {
   @ResponseBody
   public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
     if (book.getId() != id) {
-      throw new BookIdMismatchException();
+      throw new IdMismatchException();
     }
     bookRepository.findById(id)
-        .orElseThrow(BookNotFoundException::new);
+        .orElseThrow(IdNotFoundException::new);
     return bookRepository.save(book);
   }
 

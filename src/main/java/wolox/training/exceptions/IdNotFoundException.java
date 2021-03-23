@@ -1,8 +1,8 @@
 package wolox.training.exceptions;
 
-public class BookNotFoundException extends RuntimeException {
+public class IdNotFoundException extends RuntimeException {
 
-  public BookNotFoundException() {
-    super("The book id does not exist");
+  public IdNotFoundException() {
+    super("The id does not exist");
   }
 }
