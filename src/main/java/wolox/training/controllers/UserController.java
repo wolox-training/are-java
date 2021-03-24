@@ -10,12 +10,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import wolox.training.exceptions.IdMismatchException;
 import wolox.training.exceptions.IdNotFoundException;
+import wolox.training.models.Book;
 import wolox.training.models.User;
+import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
+import wolox.training.validators.BookValidator;
+import wolox.training.validators.UserValidator;
 
 @Controller
 @RequestMapping(path = "/users")
@@ -25,7 +29,13 @@ public class UserController {
   private UserRepository userRepository;
 
   @Autowired
-  private UserRepository bookRepository;
+  private BookRepository bookRepository;
+
+  @Autowired
+  private UserValidator userValidator;
+
+  @Autowired
+  private BookValidator bookValidator;
 
   @GetMapping("/{id}")
   @ResponseBody
@@ -44,33 +54,36 @@ public class UserController {
   @DeleteMapping("/{id}")
   @ResponseBody
   public void delete(@PathVariable Long id) {
-    userRepository.findById(id)
-        .orElseThrow(IdNotFoundException::new);
+    userValidator.existsId(id);
     userRepository.deleteById(id);
   }
 
   @PutMapping("/{id}")
   @ResponseBody
-  public User updateUser(@RequestBody User User, @PathVariable Long id) {
-    if (User.getId() != id) {
-      throw new IdMismatchException();
-    }
-    userRepository.findById(id)
-        .orElseThrow(IdNotFoundException::new);
-    return userRepository.save(User);
-  }
-
-/*  @PatchMapping("/{id}/books/{idBook}")
-  @ResponseBody
-  public User addBook(@RequestBody Book book, @PathVariable Long id,@PathVariable Long idBook) {
-    if (book.getId() != id) {
-      throw new IdMismatchException();
-    }
-    bookRepository.findById(idBook).orElseThrow(I)
-    userRepository.findById(id)
-        .orElseThrow(IdNotFoundException::new).addBook(book);
+  public User updateUser(@RequestBody User user, @PathVariable Long id) {
+    userValidator.idsMatchAndExist(user,id);
     return userRepository.save(user);
   }
-*/
+
+  @PostMapping("/{userId}/books")
+  @ResponseBody
+  public User addBook(@RequestBody Book book, @PathVariable Long userId) {
+    userValidator.existsId(userId);
+    bookValidator.existsId(book.getId());
+    User user=userRepository.findById(userId).get();
+    user.addBook(book);
+    return userRepository.save(user);
+  }
+
+  @DeleteMapping("/{userId}/books/{bookId}")
+  @ResponseBody
+  public User removeBook(@PathVariable Long userId,@PathVariable Long bookId) {
+    bookValidator.existsId(bookId);
+    userValidator.existsId(userId);
+    User user=userRepository.findById(userId).get();
+    Book book= bookRepository.findById(bookId).get();
+    user.removeBook(book);
+    return userRepository.save(user);
+  }
 
 }
