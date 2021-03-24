@@ -84,8 +84,7 @@ public class User {
 
   public void removeBook(Book book) {
     if (!this.books.remove(book)) {
-      ;
+      throw new BookNeverOwnedException();
     }
-    throw new BookNeverOwnedException();
   }
 }
