@@ -25,7 +25,7 @@ import wolox.training.repositories.BookRepository;
 public class BookController {
 
   @Autowired
-  BookRepository bookRepository;
+  private BookRepository bookRepository;
 
   @GetMapping("/{id}")
   @ResponseBody
