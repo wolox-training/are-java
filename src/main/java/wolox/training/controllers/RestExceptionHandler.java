@@ -15,7 +15,7 @@ import wolox.training.exceptions.BookNotFoundException;
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
   @ExceptionHandler({BookNotFoundException.class})
-  protected ResponseEntity<Object> handleNotFoundBook(
+  public ResponseEntity<Object> handleNotFoundBook(
       Exception ex, WebRequest request) {
      return handleExceptionInternal(ex, ex.getMessage(),
               new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
