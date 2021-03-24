@@ -23,18 +23,18 @@ public class User {
   @GeneratedValue(strategy = GenerationType.AUTO)
   private long id;
   @Column(nullable = false)
-  String username;
+  private String username;
   @Column(nullable = false)
-  String name;
+  private String name;
   @Column(nullable = false)
-  LocalDate birthdate;
+  private LocalDate birthdate;
 
   @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(name = "book_user",
       joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
       inverseJoinColumns = @JoinColumn(name = "user_id",
           referencedColumnName = "id"))
-  List<Book> books = new ArrayList<>();
+  private List<Book> books = new ArrayList<>();
 
   public User() {
   }
@@ -75,13 +75,17 @@ public class User {
     this.books = books;
   }
 
-  public void addBook(Book book){
-    if(this.books.stream().anyMatch(book1 -> book1.getId()==book.getId()))
+  public void addBook(Book book) {
+    if (this.books.stream().anyMatch(book1 -> book1.getId() == book.getId())) {
       throw new BookAlreadyOwnedException();
+    }
     this.books.add(book);
   }
-  public void removeBook(Book book){
-    if(!this.books.remove(book));
+
+  public void removeBook(Book book) {
+    if (!this.books.remove(book)) {
+      ;
+    }
     throw new BookNeverOwnedException();
   }
 }
