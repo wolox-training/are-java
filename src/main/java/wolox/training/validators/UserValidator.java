@@ -21,6 +21,5 @@ public class UserValidator {
     if (user.getId() != id) {
       throw new IdMismatchException();
     }
-    this.existsId(id);
   }
 }
