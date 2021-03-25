@@ -28,11 +28,9 @@ public class User {
   @Column(nullable = false)
   private String name;
   @Column(nullable = false)
-  @JsonFormat(pattern="dd/MM/yyyy")
+  @JsonFormat(pattern = "dd/MM/yyyy")
   private LocalDate birthdate;
-  /**
-   * The user's book list
-   */
+
   @ManyToMany(cascade = CascadeType.ALL)
   @JoinTable(name = "book_user",
       joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
@@ -79,8 +77,10 @@ public class User {
     this.books = books;
   }
 
+
   /**
    * The book is added if it exists and if the user doesn't already have it
+   *
    * @param book: The book to be added to the user's book list (Book)
    */
   public void addBook(Book book) {
@@ -92,6 +92,7 @@ public class User {
 
   /**
    * The book is removed if it exists and if the user already has it
+   *
    * @param book: The book to be removed from the user's book list (Book)
    */
   public void removeBook(Book book) {

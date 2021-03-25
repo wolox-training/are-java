@@ -30,9 +30,9 @@ public class BookController {
   private BookValidator bookValidator;
 
   /**
-   * This method searches the book by its id
+   * This method searches a book
    *
-   * @param id: Identifies the book to be returned (Long)
+   * @param id: Identifies the book to be searched (Book)
    * @return the result of the search.
    */
   @GetMapping("/{id}")
@@ -43,9 +43,9 @@ public class BookController {
   }
 
   /**
-   * This method creates a book
+   * This method create a book
    *
-   * @param book: Identifies the book to be saved (Book)
+   * @param book: The book to be created (Book)
    * @return the saved book.
    */
   @PostMapping
@@ -57,10 +57,12 @@ public class BookController {
 
   /**
    * This method removes a book
+   *
    * @param id: Identifies the book to be removed (Long)
    */
   @DeleteMapping("/{id}")
   @ResponseBody
+
   public void delete(@PathVariable Long id) {
     bookValidator.existsId(id);
     bookRepository.deleteById(id);
@@ -68,6 +70,7 @@ public class BookController {
 
   /**
    * This method updates a book
+   *
    * @param book: The book to be updated (Book)
    * @param id:   Identifies the book (Long)
    * @return the updated book.
@@ -81,6 +84,7 @@ public class BookController {
 
   /**
    * This method says hello
+   *
    * @param name:  The optional name to say hello to (String)
    * @param model: Contains the data that appears in the view (Model)
    * @return the view saying hello to the name or its default.
