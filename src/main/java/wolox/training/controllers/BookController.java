@@ -24,49 +24,48 @@ import wolox.training.repositories.BookRepository;
 
 public class BookController {
 
-  @Autowired
-  private BookRepository bookRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
-  @GetMapping("/{id}")
-  @ResponseBody
-  public Book findOne(@PathVariable Long id) {
-    return bookRepository.findById(id)
-        .orElseThrow(BookNotFoundException::new);
-  }
-
-  @PostMapping
-  @ResponseBody
-  @ResponseStatus(HttpStatus.CREATED)
-  public Book create(@RequestBody Book book) {
-    return bookRepository.save(book);
-  }
-
-  @DeleteMapping("/{id}")
-  @ResponseBody
-  public void delete(@PathVariable Long id) {
-    bookRepository.findById(id)
-        .orElseThrow(BookNotFoundException::new);
-    bookRepository.deleteById(id);
-  }
-
-  @PutMapping("/{id}")
-  @ResponseBody
-  public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
-    if (book.getId() != id) {
-      throw new BookIdMismatchException();
+    @GetMapping("/{id}")
+    @ResponseBody
+    public Book findOne(@PathVariable Long id) {
+        return bookRepository.findById(id)
+                .orElseThrow(BookNotFoundException::new);
     }
-    bookRepository.findById(id)
-        .orElseThrow(BookNotFoundException::new);
-    return bookRepository.save(book);
-  }
 
-  @GetMapping("/greeting")
-  public String greeting(
-      @RequestParam(name = "name", required = false, defaultValue = "World") String name,
-      Model model) {
-    model.addAttribute("name", name);
-    return "greeting";
-  }
+    @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public Book create(@RequestBody Book book) {
+        return bookRepository.save(book);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void delete(@PathVariable Long id) {
+        bookRepository.findById(id)
+                .orElseThrow(BookNotFoundException::new);
+        bookRepository.deleteById(id);
+    }
+
+    @PutMapping("/{id}")
+    @ResponseBody
+    public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
+        if (book.getId() != id) {
+            throw new BookIdMismatchException();
+        }
+        bookRepository.findById(id)
+                .orElseThrow(BookNotFoundException::new);
+        return bookRepository.save(book);
+    }
+
+    @GetMapping("/greeting")
+    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+            Model model) {
+        model.addAttribute("name", name);
+        return "greeting";
+    }
 
 
 }
