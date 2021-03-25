@@ -10,17 +10,17 @@ import wolox.training.repositories.UserRepository;
 @Component
 public class UserValidator {
 
-  @Autowired
-  private UserRepository userRepository;
+    @Autowired
+    private UserRepository userRepository;
 
-  public void existsId(Long id) {
-    this.userRepository.findById(id).orElseThrow(IdNotFoundException::new);
-  }
-
-  public void idsMatchAndExist(User user, Long id) {
-    if (user.getId() != id) {
-      throw new IdMismatchException();
+    public void existsId(Long id) {
+        this.userRepository.findById(id).orElseThrow(IdNotFoundException::new);
     }
-    this.existsId(id);
-  }
+
+    public void idsMatchAndExist(User user, Long id) {
+        if (user.getId() != id) {
+            throw new IdMismatchException();
+        }
+        this.existsId(id);
+    }
 }

@@ -20,84 +20,84 @@ import wolox.training.exceptions.BookNeverOwnedException;
 @Entity(name = "USERS")
 public class User {
 
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
-  @Column(nullable = false)
-  private String username;
-  @Column(nullable = false)
-  private String name;
-  @Column(nullable = false)
-  @JsonFormat(pattern = "dd/MM/yyyy")
-  private LocalDate birthdate;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+    @Column(nullable = false)
+    private String username;
+    @Column(nullable = false)
+    private String name;
+    @Column(nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy")
+    private LocalDate birthdate;
 
-  @ManyToMany(cascade = CascadeType.ALL)
-  @JoinTable(name = "book_user",
-      joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
-      inverseJoinColumns = @JoinColumn(name = "user_id",
-          referencedColumnName = "id"))
-  private List<Book> books = new ArrayList<>();
+    @ManyToMany(cascade = CascadeType.ALL)
+    @JoinTable(name = "book_user",
+            joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id",
+                    referencedColumnName = "id"))
+    private List<Book> books = new ArrayList<>();
 
-  public User() {
-  }
-
-  public long getId() {
-    return id;
-  }
-
-  public String getUsername() {
-    return username;
-  }
-
-  public void setUsername(String username) {
-    this.username = username;
-  }
-
-  public String getName() {
-    return name;
-  }
-
-  public void setName(String name) {
-    this.name = name;
-  }
-
-  public LocalDate getBirthdate() {
-    return birthdate;
-  }
-
-  public void setBirthdate(LocalDate birthdate) {
-    this.birthdate = birthdate;
-  }
-
-  public List<Book> getBooks() {
-    return (List<Book>) Collections.unmodifiableList(books);
-  }
-
-  public void setBooks(List<Book> books) {
-    this.books = books;
-  }
-
-
-  /**
-   * The book is added if it exists and if the user doesn't already have it
-   *
-   * @param book: The book to be added to the user's book list (Book)
-   */
-  public void addBook(Book book) {
-    if (this.books.stream().anyMatch(book1 -> book1.getId() == book.getId())) {
-      throw new BookAlreadyOwnedException();
+    public User() {
     }
-    this.books.add(book);
-  }
 
-  /**
-   * The book is removed if it exists and if the user already has it
-   *
-   * @param book: The book to be removed from the user's book list (Book)
-   */
-  public void removeBook(Book book) {
-    if (!this.books.remove(book)) {
-      throw new BookNeverOwnedException();
+    public long getId() {
+        return id;
     }
-  }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public LocalDate getBirthdate() {
+        return birthdate;
+    }
+
+    public void setBirthdate(LocalDate birthdate) {
+        this.birthdate = birthdate;
+    }
+
+    public List<Book> getBooks() {
+        return (List<Book>) Collections.unmodifiableList(books);
+    }
+
+    public void setBooks(List<Book> books) {
+        this.books = books;
+    }
+
+
+    /**
+     * The book is added if it exists and if the user doesn't already have it
+     *
+     * @param book: The book to be added to the user's book list (Book)
+     */
+    public void addBook(Book book) {
+        if (this.books.stream().anyMatch(book1 -> book1.getId() == book.getId())) {
+            throw new BookAlreadyOwnedException();
+        }
+        this.books.add(book);
+    }
+
+    /**
+     * The book is removed if it exists and if the user already has it
+     *
+     * @param book: The book to be removed from the user's book list (Book)
+     */
+    public void removeBook(Book book) {
+        if (!this.books.remove(book)) {
+            throw new BookNeverOwnedException();
+        }
+    }
 }
