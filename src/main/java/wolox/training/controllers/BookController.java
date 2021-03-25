@@ -1,5 +1,8 @@
 package wolox.training.controllers;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -23,79 +26,88 @@ import wolox.training.validators.BookValidator;
 
 public class BookController {
 
-  @Autowired
-  private BookRepository bookRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
-  @Autowired
-  private BookValidator bookValidator;
+    @Autowired
+    private BookValidator bookValidator;
 
-  /**
-   * This method searches a book
-   *
-   * @param id: Identifies the book to be searched (Book)
-   * @return the result of the search.
-   */
-  @GetMapping("/{id}")
-  @ResponseBody
-  public Book findOne(@PathVariable Long id) {
-    bookValidator.existsId(id);
-    return bookRepository.findById(id).get();
-  }
+    /**
+     * This method searches a book
+     *
+     * @param id: Identifies the book to be searched (Book)
+     *
+     * @return the result of the search.
+     */
+    @GetMapping("/{id}")
+    @ApiOperation(value = "Given and id, return the book", response = Book.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The id does not exist"),
+            @ApiResponse(code = 200, message = "")
+    })
+    @ResponseBody
+    public Book findOne(@PathVariable Long id) {
+        bookValidator.existsId(id);
+        return bookRepository.findById(id).get();
+    }
 
-  /**
-   * This method create a book
-   *
-   * @param book: The book to be created (Book)
-   * @return the saved book.
-   */
-  @PostMapping
-  @ResponseBody
-  @ResponseStatus(HttpStatus.CREATED)
-  public Book create(@RequestBody Book book) {
-    return bookRepository.save(book);
-  }
+    /**
+     * This method create a book
+     *
+     * @param book: The book to be created (Book)
+     *
+     * @return the saved book.
+     */
+    @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public Book create(@RequestBody Book book) {
+        return bookRepository.save(book);
+    }
 
-  /**
-   * This method removes a book
-   *
-   * @param id: Identifies the book to be removed (Long)
-   */
-  @DeleteMapping("/{id}")
-  @ResponseBody
+    /**
+     * This method removes a book
+     *
+     * @param id: Identifies the book to be removed (Long)
+     */
+    @DeleteMapping("/{id}")
+    @ResponseBody
 
-  public void delete(@PathVariable Long id) {
-    bookValidator.existsId(id);
-    bookRepository.deleteById(id);
-  }
+    public void delete(@PathVariable Long id) {
+        bookValidator.existsId(id);
+        bookRepository.deleteById(id);
+    }
 
-  /**
-   * This method updates a book
-   *
-   * @param book: The book to be updated (Book)
-   * @param id:   Identifies the book (Long)
-   * @return the updated book.
-   */
-  @PutMapping("/{id}")
-  @ResponseBody
-  public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
-    bookValidator.idsMatchAndExist(book, id);
-    return bookRepository.save(book);
-  }
+    /**
+     * This method updates a book
+     *
+     * @param book: The book to be updated (Book)
+     * @param id:   Identifies the book (Long)
+     *
+     * @return the updated book.
+     */
+    @PutMapping("/{id}")
+    @ResponseBody
+    public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
+        bookValidator.idsMatchAndExist(book, id);
+        return bookRepository.save(book);
+    }
 
-  /**
-   * This method says hello
-   *
-   * @param name:  The optional name to say hello to (String)
-   * @param model: Contains the data that appears in the view (Model)
-   * @return the view saying hello to the name or its default.
-   */
-  @GetMapping("/greeting")
-  public String greeting(
-      @RequestParam(name = "name", required = false, defaultValue = "World") String name,
-      Model model) {
-    model.addAttribute("name", name);
-    return "greeting";
-  }
+    /**
+     * This method says hello
+     *
+     * @param name:  The optional name to say hello to (String)
+     * @param model: Contains the data that appears in the view (Model)
+     *
+     * @return the view saying hello to the name or its default.
+     */
+    @GetMapping("/greeting")
+    public String greeting(
+            @RequestParam(name = "name", required = false, defaultValue = "World") String name,
+            Model model) {
+        model.addAttribute("name", name);
+        return "greeting";
+    }
 
 
 }
