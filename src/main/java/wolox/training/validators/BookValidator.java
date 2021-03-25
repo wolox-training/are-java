@@ -10,17 +10,17 @@ import wolox.training.repositories.BookRepository;
 @Component
 public class BookValidator {
 
-  @Autowired
-  BookRepository bookRepository;
+    @Autowired
+    BookRepository bookRepository;
 
-  public void existsId(Long id) {
-    bookRepository.findById(id).orElseThrow(IdNotFoundException::new);
-  }
-
-  public void idsMatchAndExist(Book book, Long id) {
-    if (book.getId() != id) {
-      throw new IdMismatchException();
+    public void existsId(Long id) {
+        bookRepository.findById(id).orElseThrow(IdNotFoundException::new);
     }
-    this.existsId(id);
-  }
+
+    public void idsMatchAndExist(Book book, Long id) {
+        if (book.getId() != id) {
+            throw new IdMismatchException();
+        }
+        this.existsId(id);
+    }
 }

@@ -23,47 +23,46 @@ import wolox.training.validators.BookValidator;
 
 public class BookController {
 
-  @Autowired
-  private BookRepository bookRepository;
+    @Autowired
+    private BookRepository bookRepository;
 
-  @Autowired
-  private BookValidator bookValidator;
+    @Autowired
+    private BookValidator bookValidator;
 
-  @GetMapping("/{id}")
-  @ResponseBody
-  public Book findOne(@PathVariable Long id) {
-    bookValidator.existsId(id);
-    return bookRepository.findById(id).get();
-  }
+    @GetMapping("/{id}")
+    @ResponseBody
+    public Book findOne(@PathVariable Long id) {
+        bookValidator.existsId(id);
+        return bookRepository.findById(id).get();
+    }
 
-  @PostMapping
-  @ResponseBody
-  @ResponseStatus(HttpStatus.CREATED)
-  public Book create(@RequestBody Book book) {
-    return bookRepository.save(book);
-  }
+    @PostMapping
+    @ResponseBody
+    @ResponseStatus(HttpStatus.CREATED)
+    public Book create(@RequestBody Book book) {
+        return bookRepository.save(book);
+    }
 
-  @DeleteMapping("/{id}")
-  @ResponseBody
-  public void delete(@PathVariable Long id) {
-    bookValidator.existsId(id);
-    bookRepository.deleteById(id);
-  }
+    @DeleteMapping("/{id}")
+    @ResponseBody
+    public void delete(@PathVariable Long id) {
+        bookValidator.existsId(id);
+        bookRepository.deleteById(id);
+    }
 
-  @PutMapping("/{id}")
-  @ResponseBody
-  public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
-    bookValidator.idsMatchAndExist(book,id);
-    return bookRepository.save(book);
-  }
+    @PutMapping("/{id}")
+    @ResponseBody
+    public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
+        bookValidator.idsMatchAndExist(book, id);
+        return bookRepository.save(book);
+    }
 
-  @GetMapping("/greeting")
-  public String greeting(
-      @RequestParam(name = "name", required = false, defaultValue = "World") String name,
-      Model model) {
-    model.addAttribute("name", name);
-    return "greeting";
-  }
+    @GetMapping("/greeting")
+    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+            Model model) {
+        model.addAttribute("name", name);
+        return "greeting";
+    }
 
 
 }
