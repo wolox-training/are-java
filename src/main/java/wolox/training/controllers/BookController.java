@@ -57,7 +57,6 @@ public class BookController {
 
   /**
    * This method removes a book
-   *
    * @param id: Identifies the book to be removed (Long)
    */
   @DeleteMapping("/{id}")
@@ -69,7 +68,6 @@ public class BookController {
 
   /**
    * This method updates a book
-   *
    * @param book: The book to be updated (Book)
    * @param id:   Identifies the book (Long)
    * @return the updated book.
@@ -83,7 +81,6 @@ public class BookController {
 
   /**
    * This method says hello
-   *
    * @param name:  The optional name to say hello to (String)
    * @param model: Contains the data that appears in the view (Model)
    * @return the view saying hello to the name or its default.
