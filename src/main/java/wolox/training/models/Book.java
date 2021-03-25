@@ -8,112 +8,113 @@ import javax.persistence.Id;
 
 @Entity
 public class Book {
-  @Id
-  @GeneratedValue(strategy = GenerationType.AUTO)
-  private long id;
 
-  private String genre;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
 
-  @Column(nullable = false)
-  private String author;
+    private String genre;
 
-  @Column(nullable = false)
-  private String image;
+    @Column(nullable = false)
+    private String author;
 
-  @Column(nullable = false)
-  private String title ;
+    @Column(nullable = false)
+    private String image;
 
-  @Column(nullable = false)
-  private String subtitle;
+    @Column(nullable = false)
+    private String title;
 
-  @Column(nullable = false)
-  private String publisher;
+    @Column(nullable = false)
+    private String subtitle;
 
-  @Column(nullable = false)
-  private String year;
+    @Column(nullable = false)
+    private String publisher;
 
-  @Column(nullable = false)
-  private Integer pages;
+    @Column(nullable = false)
+    private String year;
 
-  @Column(nullable = false)
-  private String isbn;
+    @Column(nullable = false)
+    private Integer pages;
 
-  public Book() {
-  }
+    @Column(nullable = false)
+    private String isbn;
 
-  public long getId() {
-    return id;
-  }
+    public Book() {
+    }
 
-  public String getGenre() {
-    return genre;
-  }
+    public long getId() {
+        return id;
+    }
 
-  public void setGenre(String genre) {
-    this.genre = genre;
-  }
+    public String getGenre() {
+        return genre;
+    }
 
-  public String getAuthor() {
-    return author;
-  }
+    public void setGenre(String genre) {
+        this.genre = genre;
+    }
 
-  public void setAuthor(String author) {
-    this.author = author;
-  }
+    public String getAuthor() {
+        return author;
+    }
 
-  public String getImage() {
-    return image;
-  }
+    public void setAuthor(String author) {
+        this.author = author;
+    }
 
-  public void setImage(String image) {
-    this.image = image;
-  }
+    public String getImage() {
+        return image;
+    }
 
-  public String getTitle() {
-    return title;
-  }
+    public void setImage(String image) {
+        this.image = image;
+    }
 
-  public void setTitle(String title) {
-    this.title = title;
-  }
+    public String getTitle() {
+        return title;
+    }
 
-  public String getSubtitle() {
-    return subtitle;
-  }
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-  public void setSubtitle(String subtitle) {
-    this.subtitle = subtitle;
-  }
+    public String getSubtitle() {
+        return subtitle;
+    }
 
-  public String getPublisher() {
-    return publisher;
-  }
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
+    }
 
-  public void setPublisher(String publisher) {
-    this.publisher = publisher;
-  }
+    public String getPublisher() {
+        return publisher;
+    }
 
-  public String getYear() {
-    return year;
-  }
+    public void setPublisher(String publisher) {
+        this.publisher = publisher;
+    }
 
-  public void setYear(String year) {
-    this.year = year;
-  }
+    public String getYear() {
+        return year;
+    }
 
-  public Integer getPages() {
-    return pages;
-  }
+    public void setYear(String year) {
+        this.year = year;
+    }
 
-  public void setPages(Integer pages) {
-    this.pages = pages;
-  }
+    public Integer getPages() {
+        return pages;
+    }
 
-  public String getIsbn() {
-    return isbn;
-  }
+    public void setPages(Integer pages) {
+        this.pages = pages;
+    }
 
-  public void setIsbn(String isbn) {
-    this.isbn = isbn;
-  }
+    public String getIsbn() {
+        return isbn;
+    }
+
+    public void setIsbn(String isbn) {
+        this.isbn = isbn;
+    }
 }
