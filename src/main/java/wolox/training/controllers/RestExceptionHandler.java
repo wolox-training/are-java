@@ -15,12 +15,13 @@ import wolox.training.exceptions.IdNotFoundException;
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-@ExceptionHandler({IdMismatchException.class,IdNotFoundException.class})
+  @ExceptionHandler({IdMismatchException.class, IdNotFoundException.class})
   public ResponseEntity<Object> handleBookIdMismatch(
       Exception ex, WebRequest request) {
     return handleExceptionInternal(ex, ex.getMessage(),
         new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
   }
+
   @ExceptionHandler({BookAlreadyOwnedException.class, BookNeverOwnedException.class})
   public ResponseEntity<Object> handleTheUserAlreadyHasThatBook(
       Exception ex, WebRequest request) {

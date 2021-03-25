@@ -21,5 +21,6 @@ public class BookValidator {
     if (book.getId() != id) {
       throw new IdMismatchException();
     }
+    this.existsId(id);
   }
 }
