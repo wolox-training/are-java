@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
@@ -53,7 +55,7 @@ public class User {
     }
 
     public void setUsername(String username) {
-        this.username = username;
+        this.username = checkNotNull(username);
     }
 
     public String getName() {
@@ -61,7 +63,7 @@ public class User {
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = checkNotNull(name);
     }
 
     public LocalDate getBirthdate() {
@@ -69,7 +71,7 @@ public class User {
     }
 
     public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = birthdate;
+        this.birthdate = checkNotNull(birthdate);
     }
 
     public List<Book> getBooks() {
@@ -77,7 +79,7 @@ public class User {
     }
 
     public void setBooks(List<Book> books) {
-        this.books = books;
+        this.books = checkNotNull(books);
     }
 
 
