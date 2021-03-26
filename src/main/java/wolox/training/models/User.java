@@ -3,7 +3,6 @@ package wolox.training.models;
 import static com.google.common.base.Preconditions.checkNotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import java.util.ArrayList;
