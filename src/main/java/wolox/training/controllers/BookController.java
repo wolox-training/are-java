@@ -29,6 +29,13 @@ public class BookController {
     @Autowired
     private BookValidator bookValidator;
 
+    /**
+     * This method searches a book
+     *
+     * @param id: Identifies the book to be searched (Book)
+     *
+     * @return the result of the search.
+     */
     @GetMapping("/{id}")
     @ResponseBody
     public Book findOne(@PathVariable Long id) {
@@ -36,6 +43,13 @@ public class BookController {
         return bookRepository.findById(id).get();
     }
 
+    /**
+     * This method create a book
+     *
+     * @param book: The book to be created (Book)
+     *
+     * @return the saved book.
+     */
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
@@ -43,13 +57,27 @@ public class BookController {
         return bookRepository.save(book);
     }
 
+    /**
+     * This method removes a book
+     *
+     * @param id: Identifies the book to be removed (Long)
+     */
     @DeleteMapping("/{id}")
     @ResponseBody
+
     public void delete(@PathVariable Long id) {
         bookValidator.existsId(id);
         bookRepository.deleteById(id);
     }
 
+    /**
+     * This method updates a book
+     *
+     * @param book: The book to be updated (Book)
+     * @param id:   Identifies the book (Long)
+     *
+     * @return the updated book.
+     */
     @PutMapping("/{id}")
     @ResponseBody
     public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
@@ -57,8 +85,17 @@ public class BookController {
         return bookRepository.save(book);
     }
 
+    /**
+     * This method says hello
+     *
+     * @param name:  The optional name to say hello to (String)
+     * @param model: Contains the data that appears in the view (Model)
+     *
+     * @return the view saying hello to the name or its default.
+     */
     @GetMapping("/greeting")
-    public String greeting(@RequestParam(name = "name", required = false, defaultValue = "World") String name,
+    public String greeting(
+            @RequestParam(name = "name", required = false, defaultValue = "World") String name,
             Model model) {
         model.addAttribute("name", name);
         return "greeting";

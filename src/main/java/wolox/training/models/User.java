@@ -77,12 +77,24 @@ public class User {
         this.books = books;
     }
 
+
+    /**
+     * The book is added if it exists and if the user doesn't already have it
+     *
+     * @param book: The book to be added to the user's book list (Book)
+     */
     public void addBook(Book book) {
         if (this.books.stream().anyMatch(book1 -> book1.getId() == book.getId())) {
             throw new BookAlreadyOwnedException();
         }
+        this.books.add(book);
     }
 
+    /**
+     * The book is removed if it exists and if the user already has it
+     *
+     * @param book: The book to be removed from the user's book list (Book)
+     */
     public void removeBook(Book book) {
         if (!this.books.remove(book)) {
             throw new BookNeverOwnedException();
