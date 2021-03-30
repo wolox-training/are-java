@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
-import wolox.training.exceptions.BookIdMismatchException;
-import wolox.training.exceptions.BookNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.validators.BookValidator;
 
 @Controller
 @RequestMapping(path = "/books")
@@ -27,11 +26,14 @@ public class BookController {
     @Autowired
     private BookRepository bookRepository;
 
+    @Autowired
+    private BookValidator bookValidator;
+
     @GetMapping("/{id}")
     @ResponseBody
     public Book findOne(@PathVariable Long id) {
-        return bookRepository.findById(id)
-                .orElseThrow(BookNotFoundException::new);
+        bookValidator.existsId(id);
+        return bookRepository.findById(id).get();
     }
 
     @PostMapping
@@ -44,19 +46,14 @@ public class BookController {
     @DeleteMapping("/{id}")
     @ResponseBody
     public void delete(@PathVariable Long id) {
-        bookRepository.findById(id)
-                .orElseThrow(BookNotFoundException::new);
+        bookValidator.existsId(id);
         bookRepository.deleteById(id);
     }
 
     @PutMapping("/{id}")
     @ResponseBody
     public Book updateBook(@RequestBody Book book, @PathVariable Long id) {
-        if (book.getId() != id) {
-            throw new BookIdMismatchException();
-        }
-        bookRepository.findById(id)
-                .orElseThrow(BookNotFoundException::new);
+        bookValidator.idsMatchAndExist(book, id);
         return bookRepository.save(book);
     }
 

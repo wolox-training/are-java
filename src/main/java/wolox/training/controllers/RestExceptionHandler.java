@@ -8,28 +8,21 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import wolox.training.exceptions.BookAlreadyOwnedException;
-import wolox.training.exceptions.BookIdMismatchException;
-import wolox.training.exceptions.BookNotFoundException;
+import wolox.training.exceptions.BookNeverOwnedException;
+import wolox.training.exceptions.IdMismatchException;
+import wolox.training.exceptions.IdNotFoundException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
 
-    @ExceptionHandler({BookNotFoundException.class})
-    public ResponseEntity<Object> handleNotFoundBook(
-            Exception ex, WebRequest request) {
-        return handleExceptionInternal(ex, ex.getMessage(),
-                new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
-
-    }
-
-    @ExceptionHandler({BookIdMismatchException.class})
+    @ExceptionHandler({IdMismatchException.class, IdNotFoundException.class})
     public ResponseEntity<Object> handleBookIdMismatch(
             Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler({BookAlreadyOwnedException.class})
+    @ExceptionHandler({BookAlreadyOwnedException.class, BookNeverOwnedException.class})
     public ResponseEntity<Object> handleTheUserAlreadyHasThatBook(
             Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),

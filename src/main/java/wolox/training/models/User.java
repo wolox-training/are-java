@@ -1,5 +1,6 @@
 package wolox.training.models;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -27,6 +28,7 @@ public class User {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate birthdate;
 
     @ManyToMany(cascade = CascadeType.ALL)
@@ -79,7 +81,6 @@ public class User {
         if (this.books.stream().anyMatch(book1 -> book1.getId() == book.getId())) {
             throw new BookAlreadyOwnedException();
         }
-        this.books.add(book);
     }
 
     public void removeBook(Book book) {
