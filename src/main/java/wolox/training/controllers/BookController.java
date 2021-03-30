@@ -62,6 +62,7 @@ public class BookController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public Book create(@RequestBody Book book) {
+        bookValidator.validateFields(book);
         return bookRepository.save(book);
     }
 

@@ -11,6 +11,7 @@ import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookNeverOwnedException;
 import wolox.training.exceptions.IdMismatchException;
 import wolox.training.exceptions.IdNotFoundException;
+import wolox.training.exceptions.NullFieldException;
 
 @ControllerAdvice
 public class RestExceptionHandler extends ResponseEntityExceptionHandler {
@@ -22,7 +23,7 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 
-    @ExceptionHandler({BookAlreadyOwnedException.class, BookNeverOwnedException.class})
+    @ExceptionHandler({BookAlreadyOwnedException.class, BookNeverOwnedException.class, NullFieldException.class})
     public ResponseEntity<Object> handleTheUserAlreadyHasThatBook(
             Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
