@@ -56,15 +56,16 @@ public class UserController {
     /**
      * This method creates a user
      *
-     * @param User: The new user to be saved (User)
+     * @param user: The new user to be saved (User)
      *
      * @return the saved user
      */
     @PostMapping
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
-    public User create(@RequestBody User User) {
-        return userRepository.save(User);
+    public User create(@RequestBody User user) {
+        userValidator.validateFields(user);
+        return userRepository.save(user);
     }
 
     /**
@@ -105,9 +106,8 @@ public class UserController {
     @PostMapping("/{userId}/books")
     @ResponseBody
     public User addBook(@RequestBody Book book, @PathVariable Long userId) {
-        userValidator.existsId(userId);
-        bookValidator.existsId(book.getId());
-        User user = userRepository.findById(userId).get();
+        User user = userRepository.findById(userId).orElseThrow(IdNotFoundException::new);
+        bookRepository.findById(book.getId()).orElseThrow(IdNotFoundException::new);
         user.addBook(book);
         return userRepository.save(user);
     }
@@ -123,10 +123,8 @@ public class UserController {
     @DeleteMapping("/{userId}/books/{bookId}")
     @ResponseBody
     public User removeBook(@PathVariable Long userId, @PathVariable Long bookId) {
-        bookValidator.existsId(bookId);
-        userValidator.existsId(userId);
-        User user = userRepository.findById(userId).get();
-        Book book = bookRepository.findById(bookId).get();
+        User user = userRepository.findById(userId).orElseThrow(IdNotFoundException::new);
+        Book book = bookRepository.findById(bookId).orElseThrow(IdNotFoundException::new);
         user.removeBook(book);
         return userRepository.save(user);
     }
