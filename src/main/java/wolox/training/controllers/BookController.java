@@ -114,7 +114,7 @@ public class BookController {
         return "greeting";
     }
 
-    @GetMapping("")
+    @GetMapping
     @ResponseBody
     public List<Book> list() {
         return StreamSupport.stream(this.bookRepository.findAll().spliterator(), false)
