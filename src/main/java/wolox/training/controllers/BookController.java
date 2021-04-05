@@ -1,5 +1,8 @@
 package wolox.training.controllers;
 
+import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.ApiResponse;
+import io.swagger.annotations.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
@@ -37,6 +40,11 @@ public class BookController {
      * @return the result of the search.
      */
     @GetMapping("/{id}")
+    @ApiOperation(value = "Given and id, return the book", response = Book.class)
+    @ApiResponses(value = {
+            @ApiResponse(code = 400, message = "The id does not exist"),
+            @ApiResponse(code = 200, message = "")
+    })
     @ResponseBody
     public Book findOne(@PathVariable Long id) {
         bookValidator.existsId(id);
@@ -54,6 +62,7 @@ public class BookController {
     @ResponseBody
     @ResponseStatus(HttpStatus.CREATED)
     public Book create(@RequestBody Book book) {
+        bookValidator.validateFields(book);
         return bookRepository.save(book);
     }
 

@@ -1,5 +1,9 @@
 package wolox.training.models;
 
+import static com.google.common.base.Preconditions.checkNotNull;
+
+import com.google.common.base.Preconditions;
+import java.time.LocalDateTime;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -52,7 +56,9 @@ public class Book {
     }
 
     public void setGenre(String genre) {
-        this.genre = genre;
+        Preconditions.checkArgument(genre.length() > 1, "The genre field must have more than 1 character");
+        this.genre = checkNotNull(genre);
+        ;
     }
 
     public String getAuthor() {
@@ -60,6 +66,7 @@ public class Book {
     }
 
     public void setAuthor(String author) {
+        Preconditions.checkArgument(!author.isEmpty(), "The author name cannot be empty");
         this.author = author;
     }
 
@@ -68,7 +75,7 @@ public class Book {
     }
 
     public void setImage(String image) {
-        this.image = image;
+        this.image = checkNotNull(image);
     }
 
     public String getTitle() {
@@ -76,7 +83,7 @@ public class Book {
     }
 
     public void setTitle(String title) {
-        this.title = title;
+        this.title = checkNotNull(title);
     }
 
     public String getSubtitle() {
@@ -84,7 +91,7 @@ public class Book {
     }
 
     public void setSubtitle(String subtitle) {
-        this.subtitle = subtitle;
+        this.subtitle = checkNotNull(subtitle);
     }
 
     public String getPublisher() {
@@ -92,7 +99,7 @@ public class Book {
     }
 
     public void setPublisher(String publisher) {
-        this.publisher = publisher;
+        this.publisher = checkNotNull(publisher);
     }
 
     public String getYear() {
@@ -100,7 +107,10 @@ public class Book {
     }
 
     public void setYear(String year) {
-        this.year = year;
+        Preconditions.checkArgument(year.matches("[0-9]+"), "The year field must contain only numbers");
+        Preconditions.checkArgument(Integer.valueOf(year) <= LocalDateTime.now().getYear(),
+                "The year field must be less than or equal to the current year");
+        this.year = checkNotNull(year);
     }
 
     public Integer getPages() {
@@ -108,7 +118,7 @@ public class Book {
     }
 
     public void setPages(Integer pages) {
-        this.pages = pages;
+        this.pages = checkNotNull(pages);
     }
 
     public String getIsbn() {
@@ -116,6 +126,6 @@ public class Book {
     }
 
     public void setIsbn(String isbn) {
-        this.isbn = isbn;
+        this.isbn = checkNotNull(isbn);
     }
 }
