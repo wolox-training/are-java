@@ -35,6 +35,8 @@ public class User {
     @JsonFormat(pattern = "dd/MM/yyyy")
     @ApiModelProperty(notes = "The date must be dd/MM/yyyy")
     private LocalDate birthdate;
+    @Column
+    private String password;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "book_user",
@@ -85,6 +87,14 @@ public class User {
         this.books = checkNotNull(books);
     }
 
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     /**
      * The book is added if it exists and if the user doesn't already have it

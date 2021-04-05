@@ -20,6 +20,7 @@ import wolox.training.models.Book;
 import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
+import wolox.training.security.PasswordEncoder;
 import wolox.training.validators.BookValidator;
 import wolox.training.validators.UserValidator;
 
@@ -38,6 +39,10 @@ public class UserController {
 
     @Autowired
     private BookValidator bookValidator;
+
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+
 
     /**
      * This method searches a user
@@ -65,6 +70,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
         userValidator.validateFields(user);
+        user.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -91,7 +97,8 @@ public class UserController {
     @PutMapping("/{id}")
     @ResponseBody
     public User updateUser(@RequestBody User user, @PathVariable Long id) {
-        userValidator.idsMatchAndExist(user, id);
+        User userFromRepo = userValidator.idsMatchAndExist(user, id);
+        userValidator.passwordMatch(user, userFromRepo);
         return userRepository.save(user);
     }
 
@@ -106,9 +113,9 @@ public class UserController {
     @PostMapping("/{userId}/books")
     @ResponseBody
     public User addBook(@RequestBody Book book, @PathVariable Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(IdNotFoundException::new);
-        bookRepository.findById(book.getId()).orElseThrow(IdNotFoundException::new);
-        user.addBook(book);
+        User user = userValidator.existsId(userId);
+        Book book1 = bookValidator.existsId(book.getId());
+        user.addBook(book1);
         return userRepository.save(user);
     }
 
@@ -123,13 +130,13 @@ public class UserController {
     @DeleteMapping("/{userId}/books/{bookId}")
     @ResponseBody
     public User removeBook(@PathVariable Long userId, @PathVariable Long bookId) {
-        User user = userRepository.findById(userId).orElseThrow(IdNotFoundException::new);
-        Book book = bookRepository.findById(bookId).orElseThrow(IdNotFoundException::new);
+        User user = userValidator.existsId(userId);
+        Book book = bookValidator.existsId(bookId);
         user.removeBook(book);
         return userRepository.save(user);
     }
 
-    @GetMapping("")
+    @GetMapping
     @ResponseBody
     public List<User> list() {
         return StreamSupport.stream(this.userRepository.findAll().spliterator(), false)

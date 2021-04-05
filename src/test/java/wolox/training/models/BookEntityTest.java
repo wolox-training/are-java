@@ -47,7 +47,7 @@ public class BookEntityTest {
     @Test
     public void whenBookHasAnEmptyAuthorField_thenItThrowsException() {
         Book book1 = new Book();
-        Exception exception=assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             book1.setAuthor("");
         });
         assertTrue(exception.getMessage().contains("The author name cannot be empty"));
@@ -56,7 +56,7 @@ public class BookEntityTest {
     @Test
     public void whenBookHasYearFieldGreaterThanTheCurrentYear_thenItThrowsException() {
         Book book1 = new Book();
-        Exception exception=assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             book1.setYear("4444");
         });
         assertTrue(exception.getMessage().contains("The year field must be less than or equal to the current year"));
@@ -66,14 +66,14 @@ public class BookEntityTest {
     @Test
     public void whenBookHasLettersInTheYearField_thenItThrowsException() {
         Book book1 = new Book();
-        Exception exception=assertThrows(IllegalArgumentException.class, () -> {
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
             book1.setYear("f4444");
         });
         assertTrue(exception.getMessage().contains("The year field must contain only numbers"));
     }
 
     @Test
-    public void whenBookItIsSaved_thenYouCanGetItBackWithId(){
+    public void whenBookItIsSaved_thenYouCanGetItBackWithId() {
         Book book1 = new Book();
         book1.setGenre("Fantasy");
         book1.setAuthor("J. K. Rowling");
@@ -84,17 +84,17 @@ public class BookEntityTest {
         book1.setYear("1997");
         book1.setPages(223);
         book1.setIsbn("9780747532743");
-        book1=bookRepository.save(book1);
-        Book book2=bookRepository.findById(book1.getId()).get();
-        assertTrue(book1.getId()==book2.getId());
-        assertTrue(book1.getAuthor()==book2.getAuthor());
-        assertTrue(book1.getImage()==book2.getImage());
-        assertTrue(book1.getYear()==book2.getYear());
-        assertTrue(book1.getPages()==book2.getPages());
-        assertTrue(book1.getIsbn()==book2.getIsbn());
-        assertTrue(book1.getPublisher()==book2.getPublisher());
-        assertTrue(book1.getSubtitle()==book2.getSubtitle());
-        assertTrue(book1.getTitle()==book2.getTitle());
+        book1 = bookRepository.save(book1);
+        Book book2 = bookRepository.findById(book1.getId()).get();
+        assertTrue(book1.getId() == book2.getId());
+        assertTrue(book1.getAuthor() == book2.getAuthor());
+        assertTrue(book1.getImage() == book2.getImage());
+        assertTrue(book1.getYear() == book2.getYear());
+        assertTrue(book1.getPages() == book2.getPages());
+        assertTrue(book1.getIsbn() == book2.getIsbn());
+        assertTrue(book1.getPublisher() == book2.getPublisher());
+        assertTrue(book1.getSubtitle() == book2.getSubtitle());
+        assertTrue(book1.getTitle() == book2.getTitle());
     }
 
 }
