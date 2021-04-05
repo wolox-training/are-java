@@ -19,16 +19,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
+import wolox.training.security.PasswordEncoder;
 import wolox.training.validators.BookValidator;
 import wolox.training.validators.UserValidator;
 
 @WebMvcTest(controllers = UserController.class)
+@ActiveProfiles("test")
 public class UserControllerTests {
 
     private User user1;
@@ -46,6 +49,8 @@ public class UserControllerTests {
     private BookValidator bookValidator;
     @MockBean
     private BookRepository bookRepository;
+    @MockBean
+    private PasswordEncoder passwordEncoder;
 
     @BeforeEach
     void setUp() {
@@ -116,6 +121,7 @@ public class UserControllerTests {
     @Test
     void whenCreateAnUserWithCorrectFields_thenItReturnsCreated() throws Exception {
         Mockito.when(userRepository.save(any())).thenReturn(user1);
+        Mockito.when(passwordEncoder.encode(any(String.class))).thenReturn(user1.getPassword());
         mvc.perform(post(basicUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userJsonString))
@@ -153,7 +159,7 @@ public class UserControllerTests {
     @Test
     void whenDeleteAnUserWhichExists_thenItReturnsOk() throws Exception {
         doNothing().when(userRepository).deleteById(any(Long.class));
-        doNothing().when(userValidator).existsId(any(Long.class));
+        Mockito.when(userValidator.existsId(any(Long.class))).thenReturn(user1);
         mvc.perform(delete(basicUrl + "1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -168,8 +174,9 @@ public class UserControllerTests {
 
     @Test
     void whenUpdateAnUserWhichExistsWithCorrectFields_thenItReturnsOk() throws Exception {
-        doNothing().when(userValidator).idsMatchAndExist(any(User.class), any(Long.class));
-        Mockito.when(userRepository.save(any(User.class))).thenReturn(user1);
+        Mockito.when(userValidator.idsMatchAndExist(any(User.class), any(Long.class))).thenReturn(user1);
+        doNothing().when(userValidator).passwordMatch(any(User.class), any(User.class));
+
         mvc.perform(put(basicUrl + "1").contentType(MediaType.APPLICATION_JSON).content(userJsonString))
                 .andExpect(status().isOk());
     }
@@ -183,8 +190,8 @@ public class UserControllerTests {
 
     @Test
     void whenAddsABookWhichExistsAndIsNotInTheUsersList_thenItReturnsOk() throws Exception {
-        Mockito.when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user1));
-        Mockito.when(bookRepository.findById(any(Long.class))).thenReturn(Optional.of(book1));
+        Mockito.when(userValidator.existsId(any(Long.class))).thenReturn(user1);
+        Mockito.when(bookValidator.existsId(any(Long.class))).thenReturn(book1);
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user1);
         mvc.perform(post(basicUrl + "1/books").contentType(MediaType.APPLICATION_JSON).content(bookJsonString))
                 .andExpect(status().isOk());
@@ -193,8 +200,8 @@ public class UserControllerTests {
     @Test
     void whenAddsABookWhichExistsAndIsInTheUsersList_thenItReturnsBadRequest() throws Exception {
         user1.addBook(book1);
-        Mockito.when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user1));
-        Mockito.when(bookRepository.findById(any(Long.class))).thenReturn(Optional.of(book1));
+        Mockito.when(userValidator.existsId(any(Long.class))).thenReturn(user1);
+        Mockito.when(bookValidator.existsId(any(Long.class))).thenReturn(book1);
         mvc.perform(post(basicUrl + "1/books").contentType(MediaType.APPLICATION_JSON).content(bookJsonString))
                 .andExpect(status().isBadRequest());
     }
@@ -202,8 +209,8 @@ public class UserControllerTests {
     @Test
     void whenRemovesABookWhichExistsAndIsInTheUsersList_thenItReturnsOk() throws Exception {
         user1.addBook(book1);
-        Mockito.when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user1));
-        Mockito.when(bookRepository.findById(any(Long.class))).thenReturn(Optional.of(book1));
+        Mockito.when(userValidator.existsId(any(Long.class))).thenReturn(user1);
+        Mockito.when(bookValidator.existsId(any(Long.class))).thenReturn(book1);
         Mockito.when(userRepository.save(any(User.class))).thenReturn(user1);
         mvc.perform(delete(basicUrl + "1/books/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -211,8 +218,8 @@ public class UserControllerTests {
 
     @Test
     void whenRemovesABookWhichExistsAndIsNotInTheUsersList_thenItReturnsBadRequest() throws Exception {
-        Mockito.when(userRepository.findById(any(Long.class))).thenReturn(Optional.of(user1));
-        Mockito.when(bookRepository.findById(any(Long.class))).thenReturn(Optional.of(book1));
+        Mockito.when(userValidator.existsId(any(Long.class))).thenReturn(user1);
+        Mockito.when(bookValidator.existsId(any(Long.class))).thenReturn(book1);
         mvc.perform(delete(basicUrl + "1/books/1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }

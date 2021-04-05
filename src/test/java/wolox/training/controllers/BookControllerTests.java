@@ -16,17 +16,24 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.exceptions.NullFieldException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.security.CustomUserDetailesService;
+import wolox.training.security.SecurityConfig;
 import wolox.training.validators.BookValidator;
 
 @WebMvcTest(controllers = BookController.class)
+@ActiveProfiles("test")
 public class BookControllerTests {
 
     private static Book book1;
@@ -39,6 +46,7 @@ public class BookControllerTests {
     private BookRepository bookRepository;
     @MockBean
     private BookValidator bookValidator;
+
 
     @BeforeAll
     static void setUp() {
@@ -215,7 +223,7 @@ public class BookControllerTests {
     @Test
     void whenDeleteABookWhichExists_thenItReturnsOk() throws Exception {
         doNothing().when(bookRepository).deleteById(any());
-        doNothing().when(bookValidator).existsId(any());
+        Mockito.when(bookValidator.existsId(any(Long.class))).thenReturn(book1);
         mvc.perform(delete(basicUrl + "1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -230,7 +238,7 @@ public class BookControllerTests {
 
     @Test
     void whenUpdateABookWhichExistsWithCorrectFields_thenItReturnsOk() throws Exception {
-        doNothing().when(bookValidator).idsMatchAndExist(any(Book.class), any(Long.class));
+        Mockito.when(bookValidator.idsMatchAndExist(any(Book.class), any(Long.class))).thenReturn(book1);
         Mockito.when(bookRepository.save(any(Book.class))).thenReturn(book1);
         mvc.perform(put(basicUrl + "1").contentType(MediaType.APPLICATION_JSON).content(bookRandomJsonString))
                 .andExpect(status().isOk());

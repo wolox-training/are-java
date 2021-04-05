@@ -70,7 +70,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
         userValidator.validateFields(user);
-        user.setPassword(passwordEncoder.encoder().encode(user.getPassword()));
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 
@@ -142,5 +142,6 @@ public class UserController {
         return StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
     }
+
 
 }

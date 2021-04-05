@@ -4,6 +4,7 @@ package wolox.training.security;
 import java.util.HashSet;
 import java.util.Set;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -14,6 +15,7 @@ import wolox.training.models.User;
 import wolox.training.repositories.UserRepository;
 
 @Service
+@Profile("!test")
 public class CustomUserDetailesService implements UserDetailsService {
 
     @Autowired
