@@ -131,7 +131,7 @@ public class UserController {
         return userRepository.save(user);
     }
 
-    @GetMapping("")
+    @GetMapping
     @ResponseBody
     public List<User> list() {
         return StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
