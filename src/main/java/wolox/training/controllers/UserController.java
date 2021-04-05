@@ -1,8 +1,10 @@
 package wolox.training.controllers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.models.User;
@@ -20,8 +23,8 @@ import wolox.training.repositories.UserRepository;
 import wolox.training.validators.BookValidator;
 import wolox.training.validators.UserValidator;
 
-@Controller
-@RequestMapping(path = "/users")
+@RequestMapping("/api/users")
+@RestController
 public class UserController {
 
     @Autowired
@@ -126,6 +129,13 @@ public class UserController {
         Book book = bookRepository.findById(bookId).get();
         user.removeBook(book);
         return userRepository.save(user);
+    }
+
+    @GetMapping
+    @ResponseBody
+    public List<User> list() {
+        return StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
     }
 
 }

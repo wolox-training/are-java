@@ -3,9 +3,11 @@ package wolox.training.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,12 +19,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 import wolox.training.validators.BookValidator;
 
-@Controller
-@RequestMapping(path = "/books")
+@RequestMapping("/api/books")
+@RestController
 
 public class BookController {
 
@@ -110,5 +113,10 @@ public class BookController {
         return "greeting";
     }
 
-
+    @GetMapping
+    @ResponseBody
+    public List<Book> list() {
+        return StreamSupport.stream(this.bookRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList());
+    }
 }
