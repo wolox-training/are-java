@@ -1,9 +1,7 @@
 package wolox.training.models;
 
-import static com.google.common.base.Preconditions.checkNotNull;
-
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.google.common.base.Preconditions;
+import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -55,8 +53,7 @@ public class User {
     }
 
     public void setUsername(String username) {
-        Preconditions.checkArgument(username.length() > 1, "The username field must have more than 1 character");
-        this.username = checkNotNull(username);
+        this.username = username;
     }
 
     public String getName() {
@@ -64,9 +61,7 @@ public class User {
     }
 
     public void setName(String name) {
-        Preconditions.checkArgument(name.chars().allMatch(Character::isLetter),
-                "The name field cannot have numbers");
-        this.name = checkNotNull(name);
+        this.name = name;
     }
 
     public LocalDate getBirthdate() {
@@ -74,7 +69,7 @@ public class User {
     }
 
     public void setBirthdate(LocalDate birthdate) {
-        this.birthdate = checkNotNull(birthdate);
+        this.birthdate = birthdate;
     }
 
     public List<Book> getBooks() {
@@ -82,7 +77,7 @@ public class User {
     }
 
     public void setBooks(List<Book> books) {
-        this.books = checkNotNull(books);
+        this.books = books;
     }
 
 
