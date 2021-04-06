@@ -3,7 +3,6 @@ package wolox.training.controllers;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
-import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -122,13 +121,17 @@ public class BookController {
 
     @GetMapping
     @ResponseBody
-    public List<Book> list() {
-        return StreamSupport.stream(this.bookRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+    public ResponseEntity<Object> list(
+            @RequestParam(name = "isbn", required = false) Optional<String> isbn) {
+        if (isbn.isPresent()) {
+            return this.getBookByIsbn(isbn.get());
+        }
+        return new ResponseEntity<>(StreamSupport.stream(this.bookRepository.findAll().spliterator(), false)
+                .collect(Collectors.toList()), HttpStatus.OK);
     }
 
-    @GetMapping("/isbn/{isbnNumber}")
-    public ResponseEntity<Book> getBookByIsbn(@PathVariable("isbnNumber") String isbn) {
+
+    private ResponseEntity<Object> getBookByIsbn(String isbn) {
         Optional<Book> bookOptional = bookRepository.findFirstByIsbn(isbn);
         if (bookOptional.isPresent()) {
             return new ResponseEntity<>(bookOptional.get(), HttpStatus.OK);

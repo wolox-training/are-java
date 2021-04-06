@@ -80,7 +80,6 @@ public class BookControllerTests {
         bookJsonString = objectMapper.writeValueAsString(book1);
 
 
-
     }
 
 
