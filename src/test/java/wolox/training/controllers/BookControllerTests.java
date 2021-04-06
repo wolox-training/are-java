@@ -10,6 +10,8 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import java.time.LocalDateTime;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeAll;
@@ -38,8 +40,9 @@ public class BookControllerTests {
 
     private static Book book1;
     private static String bookWithVariableYearJsonString;
-    private static String bookRandomJsonString;
+    private static String bookJsonString;
     private static String basicUrl;
+    private static ObjectMapper objectMapper;
     @Autowired
     private MockMvc mvc;
     @MockBean
@@ -49,7 +52,8 @@ public class BookControllerTests {
 
 
     @BeforeAll
-    static void setUp() {
+    static void setUp() throws JsonProcessingException {
+        objectMapper=new ObjectMapper();
         basicUrl = "/api/books/";
 
         bookWithVariableYearJsonString = "{ "
@@ -64,7 +68,6 @@ public class BookControllerTests {
                 + "  \"pages\":223,  "
                 + "  \"isbn\":9780747532743"
                 + "  }";
-        bookRandomJsonString = String.format(bookWithVariableYearJsonString, 2020);
 
         book1 = new Book();
         book1.setGenre("Fantasy");
@@ -76,6 +79,8 @@ public class BookControllerTests {
         book1.setYear("1997");
         book1.setPages(223);
         book1.setIsbn("9780747532743");
+        bookJsonString = objectMapper.writeValueAsString(book1);
+
 
 
     }
@@ -88,18 +93,7 @@ public class BookControllerTests {
         mvc.perform(get(url)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json("{"
-                        + "    \"id\": 0,"
-                        + "    \"genre\": \"Fantasy\","
-                        + "    \"author\": \"J. K. Rowling\","
-                        + "    \"image\": \"image.jpg\","
-                        + "    \"title\": \"Harry Potter and the Philosopher's Stone\","
-                        + "    \"subtitle\": \"-\","
-                        + "    \"publisher\": \"Bloomsbury Publishing\","
-                        + "    \"year\": \"1997\","
-                        + "    \"pages\": 223,"
-                        + "    \"isbn\": \"9780747532743\""
-                        + "}"));
+                .andExpect(content().json(bookJsonString));
     }
 
     @Test
@@ -113,21 +107,11 @@ public class BookControllerTests {
 
     @Test
     void whenCreateABookWithCorrectFields_thenItReturnsCreated() throws Exception {
-        String jsonBook = "{ "
-                + "  \"genre\": \"Fantasy\","
-                + "  \"author\":\"J. K. Rowling\","
-                + "  \"image\":\"image.jpg\","
-                + "  \"title\":\"Harry Potter and the Philosopher's Stone\","
-                + "  \"subtitle\":\"-\","
-                + "  \"publisher\":\"Bloomsbury Publishing\","
-                + "  \"year\":1997,"
-                + "  \"pages\":223,  "
-                + "  \"isbn\":9780747532743"
-                + "  }";
+
         Mockito.when(bookRepository.save(any())).thenReturn(book1);
         mvc.perform(post(basicUrl)
                 .contentType(MediaType.APPLICATION_JSON)
-                .content(jsonBook))
+                .content(bookJsonString))
                 .andExpect(status().isCreated());
     }
 
@@ -240,14 +224,14 @@ public class BookControllerTests {
     void whenUpdateABookWhichExistsWithCorrectFields_thenItReturnsOk() throws Exception {
         Mockito.when(bookValidator.idsMatchAndExist(any(Book.class), any(Long.class))).thenReturn(book1);
         Mockito.when(bookRepository.save(any(Book.class))).thenReturn(book1);
-        mvc.perform(put(basicUrl + "1").contentType(MediaType.APPLICATION_JSON).content(bookRandomJsonString))
+        mvc.perform(put(basicUrl + "1").contentType(MediaType.APPLICATION_JSON).content(bookJsonString))
                 .andExpect(status().isOk());
     }
 
     @Test
     void whenUpdateABookWhichDoesNotExistsWithCorrectFields_thenItReturnsBadRequest() throws Exception {
         doThrow(IdNotFoundException.class).when(bookValidator).idsMatchAndExist(any(Book.class), any(Long.class));
-        mvc.perform(put(basicUrl + "1").contentType(MediaType.APPLICATION_JSON).content(bookRandomJsonString))
+        mvc.perform(put(basicUrl + "1").contentType(MediaType.APPLICATION_JSON).content(bookJsonString))
                 .andExpect(status().isBadRequest());
     }
 
