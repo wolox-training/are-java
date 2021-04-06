@@ -10,6 +10,10 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -48,18 +52,15 @@ public class UserControllerTests {
     private BookRepository bookRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws JsonProcessingException {
+        ObjectMapper objectMapper= new ObjectMapper();
         basicUrl = "/api/users/";
         user1 = new User();
         user1.setUsername("Alis");
         user1.setName("Michella");
         user1.setBirthdate(LocalDate.of(1997, 5, 23));
-        userJsonString = "   {"
-                + "        \"username\": \"Alis\","
-                + "        \"name\": \"Michella\","
-                + "        \"birthdate\": \"23/05/1997\","
-                + "        \"books\": []"
-                + "    }";
+
+        userJsonString = objectMapper.writeValueAsString(user1);
         book1 = new Book();
         book1.setGenre("Fantasy");
         book1.setAuthor("J. K. Rowling");
@@ -71,18 +72,7 @@ public class UserControllerTests {
         book1.setPages(223);
         book1.setIsbn("9780747532743");
 
-        bookJsonString = "{"
-                + "    \"id\": 0,"
-                + "    \"genre\": \"Fantasy\","
-                + "    \"author\": \"J. K. Rowling\","
-                + "    \"image\": \"image.jpg\","
-                + "    \"title\": \"Harry Potter and the Philosopher's Stone\","
-                + "    \"subtitle\": \"-\","
-                + "    \"publisher\": \"Bloomsbury Publishing\","
-                + "    \"year\": \"1997\","
-                + "    \"pages\": 223,"
-                + "    \"isbn\": \"9780747532743\""
-                + "}";
+        bookJsonString = objectMapper.writeValueAsString(book1);
 
     }
 
@@ -91,17 +81,10 @@ public class UserControllerTests {
     void whenFindByIdWhichExists_thenUserIsReturned() throws Exception {
         Mockito.when(userRepository.findById(1L)).thenReturn(Optional.of(user1));
         String url = basicUrl + "1";
-        String jsonUserWithId = "{"
-                + "    \"id\": 0,"
-                + "    \"username\": \"Alis\","
-                + "    \"name\": \"Michella\","
-                + "    \"birthdate\": \"23/05/1997\","
-                + "    \"books\": []"
-                + "}";
         mvc.perform(get(url)
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().json(jsonUserWithId));
+                .andExpect(content().json(userJsonString));
     }
 
     @Test
