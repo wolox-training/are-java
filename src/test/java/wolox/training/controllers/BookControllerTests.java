@@ -18,11 +18,8 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfiguration;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
@@ -30,8 +27,6 @@ import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.exceptions.NullFieldException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
-import wolox.training.security.CustomUserDetailesService;
-import wolox.training.security.SecurityConfig;
 import wolox.training.validators.BookValidator;
 
 @WebMvcTest(controllers = BookController.class)
@@ -53,7 +48,7 @@ public class BookControllerTests {
 
     @BeforeAll
     static void setUp() throws JsonProcessingException {
-        objectMapper=new ObjectMapper();
+        objectMapper = new ObjectMapper();
         basicUrl = "/api/books/";
 
         bookWithVariableYearJsonString = "{ "
@@ -80,7 +75,6 @@ public class BookControllerTests {
         book1.setPages(223);
         book1.setIsbn("9780747532743");
         bookJsonString = objectMapper.writeValueAsString(book1);
-
 
 
     }

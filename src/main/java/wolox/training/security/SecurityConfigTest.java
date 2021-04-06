@@ -8,9 +8,10 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 @Configuration
 @Profile("test")
 public class SecurityConfigTest extends WebSecurityConfigurerAdapter {
-        @Override
-        public void configure(WebSecurity web) throws Exception {
-            web.ignoring().antMatchers("/**");
-        }
+
+    @Override
+    public void configure(WebSecurity web) throws Exception {
+        web.ignoring().antMatchers("/**");
     }
+}
 

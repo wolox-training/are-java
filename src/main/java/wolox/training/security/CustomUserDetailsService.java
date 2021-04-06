@@ -16,7 +16,7 @@ import wolox.training.repositories.UserRepository;
 
 @Service
 @Profile("!test")
-public class CustomUserDetailesService implements UserDetailsService {
+public class CustomUserDetailsService implements UserDetailsService {
 
     @Autowired
     private UserRepository userRepository;

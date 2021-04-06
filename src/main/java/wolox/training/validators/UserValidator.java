@@ -10,7 +10,7 @@ import wolox.training.exceptions.PasswordChangeNotAllowed;
 import wolox.training.exceptions.UsernameExistsException;
 import wolox.training.models.User;
 import wolox.training.repositories.UserRepository;
-import wolox.training.security.PasswordEncoder;
+import wolox.training.security.PasswordEncoderBCrypt;
 
 @Component
 public class UserValidator {
@@ -19,7 +19,7 @@ public class UserValidator {
     private UserRepository userRepository;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoderBCrypt passwordEncoderBCrypt;
 
     public User existsId(Long id) {
         return this.userRepository.findById(id).orElseThrow(IdNotFoundException::new);
@@ -47,7 +47,7 @@ public class UserValidator {
     }
 
     public void passwordMatch(User userFromRequest, User userFromRepo) {
-        if (!passwordEncoder.encoder().matches(userFromRequest.getPassword(), userFromRepo.getPassword())) {
+        if (!passwordEncoderBCrypt.encoder().matches(userFromRequest.getPassword(), userFromRepo.getPassword())) {
             throw new PasswordChangeNotAllowed("The password cannot be change when the user is updated");
         }
 

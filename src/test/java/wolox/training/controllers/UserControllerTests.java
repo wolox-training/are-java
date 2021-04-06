@@ -12,8 +12,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.util.Optional;
 import org.junit.jupiter.api.BeforeEach;
@@ -25,12 +23,12 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
+import wolox.training.Encoder;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
-import wolox.training.security.PasswordEncoder;
 import wolox.training.validators.BookValidator;
 import wolox.training.validators.UserValidator;
 
@@ -54,16 +52,18 @@ public class UserControllerTests {
     @MockBean
     private BookRepository bookRepository;
     @MockBean
-    private PasswordEncoder passwordEncoder;
+    private Encoder encoder;
 
     @BeforeEach
     void setUp() throws JsonProcessingException {
-        ObjectMapper objectMapper= new ObjectMapper();
+        ObjectMapper objectMapper = new ObjectMapper();
+        String password = "1234";
         basicUrl = "/api/users/";
         user1 = new User();
         user1.setUsername("Alis");
         user1.setName("Michella");
         user1.setBirthdate(LocalDate.of(1997, 5, 23));
+        user1.setPassword(password);
 
         userJsonString = objectMapper.writeValueAsString(user1);
         book1 = new Book();
@@ -78,6 +78,7 @@ public class UserControllerTests {
         book1.setIsbn("9780747532743");
 
         bookJsonString = objectMapper.writeValueAsString(book1);
+        Mockito.when(encoder.encode(any(String.class))).thenReturn(password);
 
     }
 
@@ -104,7 +105,6 @@ public class UserControllerTests {
     @Test
     void whenCreateAnUserWithCorrectFields_thenItReturnsCreated() throws Exception {
         Mockito.when(userRepository.save(any())).thenReturn(user1);
-        Mockito.when(passwordEncoder.encode(any(String.class))).thenReturn(user1.getPassword());
         mvc.perform(post(basicUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(userJsonString))

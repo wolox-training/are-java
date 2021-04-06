@@ -15,12 +15,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import wolox.training.Encoder;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.models.User;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
-import wolox.training.security.PasswordEncoder;
 import wolox.training.validators.BookValidator;
 import wolox.training.validators.UserValidator;
 
@@ -41,7 +41,7 @@ public class UserController {
     private BookValidator bookValidator;
 
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private Encoder encoder;
 
 
     /**
@@ -70,7 +70,7 @@ public class UserController {
     @ResponseStatus(HttpStatus.CREATED)
     public User create(@RequestBody User user) {
         userValidator.validateFields(user);
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setPassword(encoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
 

@@ -18,9 +18,9 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private CustomUserDetailesService customUserDetailesService;
+    private CustomUserDetailsService customUserDetailsService;
     @Autowired
-    private PasswordEncoder passwordEncoder;
+    private PasswordEncoderBCrypt passwordEncoderBCrypt;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
@@ -40,8 +40,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Bean
     DaoAuthenticationProvider authProvider() {
         DaoAuthenticationProvider daoAuthenticationProvider = new DaoAuthenticationProvider();
-        daoAuthenticationProvider.setPasswordEncoder(passwordEncoder.encoder());
-        daoAuthenticationProvider.setUserDetailsService(customUserDetailesService);
+        daoAuthenticationProvider.setPasswordEncoder(passwordEncoderBCrypt.encoder());
+        daoAuthenticationProvider.setUserDetailsService(customUserDetailsService);
         return daoAuthenticationProvider;
     }
 

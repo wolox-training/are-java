@@ -36,7 +36,7 @@ public class User {
     @Column(nullable = false)
     private String name;
     @Column(nullable = false)
-    @JsonFormat(shape = JsonFormat.Shape.STRING,pattern = "dd/MM/yyyy")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     @JsonDeserialize(using = LocalDateDeserializer.class)
     @JsonSerialize(using = LocalDateSerializer.class)
     @ApiModelProperty(notes = "The date must be dd/MM/yyyy")
@@ -50,6 +50,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "id"))
     private List<Book> books = new ArrayList<>();
+
 
     public User() {
     }
