@@ -4,10 +4,12 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,6 +25,7 @@ import org.springframework.web.bind.annotation.RestController;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.services.BookService;
 import wolox.training.validators.BookValidator;
 
 @RequestMapping("/api/books")
@@ -35,6 +38,9 @@ public class BookController {
 
     @Autowired
     private BookValidator bookValidator;
+
+    @Autowired
+    private BookService bookService;
 
     /**
      * This method searches a book
@@ -119,5 +125,17 @@ public class BookController {
     public List<Book> list() {
         return StreamSupport.stream(this.bookRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping("/isbn/{isbnNumber}")
+    public ResponseEntity<Book> getBookByIsbn(@PathVariable("isbnNumber") String isbn) {
+        Optional<Book> bookOptional = bookRepository.findFirstByIsbn(isbn);
+        if (bookOptional.isPresent()) {
+            return new ResponseEntity<>(bookOptional.get(), HttpStatus.OK);
+        } else {
+            Book book = bookService.searchBook(isbn);
+            bookRepository.save(book);
+            return new ResponseEntity<>(book, HttpStatus.CREATED);
+        }
     }
 }

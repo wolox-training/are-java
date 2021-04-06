@@ -29,7 +29,6 @@ public class BookValidator {
     public void validateFields(Book book) {
         try {
             Preconditions.checkNotNull(book.getAuthor(), "Author must have a value");
-            Preconditions.checkNotNull(book.getImage(), "Image must have a value");
             Preconditions.checkNotNull(book.getTitle(), "Title must have a value");
             Preconditions.checkNotNull(book.getSubtitle(), "Subtitle must have a value");
             Preconditions.checkNotNull(book.getPublisher(), "Publisher must have a value");

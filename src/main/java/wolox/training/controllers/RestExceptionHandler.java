@@ -12,6 +12,7 @@ import wolox.training.exceptions.BookNeverOwnedException;
 import wolox.training.exceptions.IdMismatchException;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.exceptions.NullFieldException;
+import wolox.training.exceptions.OpenLibraryException;
 import wolox.training.exceptions.PasswordChangeNotAllowed;
 import wolox.training.exceptions.UsernameExistsException;
 
@@ -32,6 +33,11 @@ public class RestExceptionHandler extends ResponseEntityExceptionHandler {
             Exception ex, WebRequest request) {
         return handleExceptionInternal(ex, ex.getMessage(),
                 new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
+    }
+
+    @ExceptionHandler(OpenLibraryException.class)
+    public ResponseEntity<Object> handleNotFoundBook(Exception ex, WebRequest request) {
+        return handleExceptionInternal(ex, ex.getMessage(), new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
 }
