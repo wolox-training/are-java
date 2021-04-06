@@ -21,9 +21,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
-import wolox.training.Encoder;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.models.User;
@@ -52,7 +52,7 @@ public class UserControllerTests {
     @MockBean
     private BookRepository bookRepository;
     @MockBean
-    private Encoder encoder;
+    private PasswordEncoder encoder;
 
     @BeforeEach
     void setUp() throws JsonProcessingException {
