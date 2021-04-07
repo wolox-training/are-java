@@ -19,7 +19,7 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     @Query("SELECT u FROM USERS u WHERE (:dateFrom IS NULL OR u.birthdate >= :dateFrom) AND (:dateTo IS NULL"
             + " OR u.birthdate <= :dateTo) AND (:someChars IS NULL OR LOWER(u.name) LIKE CONCAT('%',LOWER(:someChars),'%'))")
-    Optional<List<User>> findUserByBirthdayBetweenAndContaining(@Param("dateFrom") LocalDate dateFrom,
+    List<User> findUserByBirthdayBetweenAndContaining(@Param("dateFrom") LocalDate dateFrom,
             @Param("dateTo") LocalDate dateTo,
             @Param("someChars") String someChars);
 }

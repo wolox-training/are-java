@@ -116,7 +116,7 @@ public class BookEntityTest {
         List<Book> bookList = booksForTest.books();
         bookList.forEach(book -> bookRepository.save(book));
         List<Book> filterBooks = this.filterBooksByYearPublisherAndGenre(year, publisher, genre, bookList);
-        List<Book> responseBooks = this.bookRepository.findByPublisherAndYearAndGenre(publisher, year, genre).get();
+        List<Book> responseBooks = this.bookRepository.findByPublisherAndYearAndGenre(publisher, year, genre);
         assertSame(filterBooks.size(), responseBooks.size());
         assertTrue(responseBooks.containsAll(filterBooks));
     }
