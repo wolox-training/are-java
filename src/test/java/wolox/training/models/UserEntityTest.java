@@ -173,7 +173,7 @@ public class UserEntityTest {
         users.forEach(user -> userRepository.save(user));
 
         List<User> resultQuery = userRepository
-                .findUserByBirthdayBetweenAndContaining(null, null, partOfName).get();
+                .findUserByBirthdayBetweenAndContaining(null, null, partOfName);
         List<User> usersFilter = this.filterUserByDatesAndName(null, null, partOfName, users);
         assertSame(resultQuery.size(), usersFilter.size());
         assertTrue(usersFilter.containsAll(resultQuery));
@@ -186,7 +186,7 @@ public class UserEntityTest {
         LocalDate to = LocalDate.of(1981, 2, 13);
         users.forEach(user -> userRepository.save(user));
         List<User> resultQuery = userRepository
-                .findUserByBirthdayBetweenAndContaining(null, to, null).get();
+                .findUserByBirthdayBetweenAndContaining(null, to, null);
         List<User> usersFilter = this.filterUserByDatesAndName(null, to, null, users);
         assertSame(resultQuery.size(), usersFilter.size());
         assertTrue(usersFilter.containsAll(resultQuery));
@@ -199,7 +199,7 @@ public class UserEntityTest {
         LocalDate from = LocalDate.of(1981, 2, 13);
         users.forEach(user -> userRepository.save(user));
         List<User> resultQuery = userRepository
-                .findUserByBirthdayBetweenAndContaining(from, null, null).get();
+                .findUserByBirthdayBetweenAndContaining(from, null, null);
         List<User> usersFilter = this.filterUserByDatesAndName(from, null, null, users);
         assertSame(resultQuery.size(), usersFilter.size());
         assertTrue(usersFilter.containsAll(resultQuery));
