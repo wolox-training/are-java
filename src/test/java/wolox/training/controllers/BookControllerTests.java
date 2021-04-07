@@ -173,7 +173,7 @@ public class BookControllerTests {
     void whenCreateABookWithGreaterYearThatTheCurrentOneAndTheOtherFieldsCorrects_thenItReturnsBadRequest()
             throws Exception {
         int year = LocalDateTime.now().getYear() + 1;
-        String jsonBook = String.format(bookWithVariableYearJsonString, String.valueOf(year));
+        String jsonBook = String.format(bookWithVariableYearJsonString, year);
         mvc.perform(post(basicUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBook))
@@ -183,7 +183,7 @@ public class BookControllerTests {
     @Test
     void whenCreateABookWithTheCurrentYearAndTheOtherFieldsCorrects_thenItReturnsCreated() throws Exception {
         int year = LocalDateTime.now().getYear();
-        String jsonBook = String.format(bookWithVariableYearJsonString, String.valueOf(year));
+        String jsonBook = String.format(bookWithVariableYearJsonString, year);
         mvc.perform(post(basicUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBook))
@@ -194,7 +194,7 @@ public class BookControllerTests {
     void whenCreateABookWithALowerYearThatTheCurrentOneAndTheOtherFieldsCorrects_thenItReturnsCreated()
             throws Exception {
         int year = LocalDateTime.now().getYear() - 12;
-        String jsonBook = String.format(bookWithVariableYearJsonString, String.valueOf(year));
+        String jsonBook = String.format(bookWithVariableYearJsonString, year);
         mvc.perform(post(basicUrl)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(jsonBook))
