@@ -5,7 +5,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.Assert;
 import org.junit.jupiter.api.Test;
@@ -156,9 +155,8 @@ public class UserEntityTest {
         LocalDate to = LocalDate.of(1981, 2, 13);
         String partOfName = "H";
         users.forEach(user -> userRepository.save(user));
-        Optional<List<User>> optionalUsers = userRepository
+        List<User> resultQuery = userRepository
                 .findByBirthdateBetweenAndNameIgnoreCaseContaining(from, to, partOfName);
-        List<User> resultQuery = optionalUsers.get();
         List<User> usersFilter = this.filterUserByDatesAndName(from, to, partOfName, users);
         Assert.assertTrue(resultQuery.size() == usersFilter.size());
         Assert.assertTrue(resultQuery.stream().allMatch(user -> usersFilter.contains(user)));

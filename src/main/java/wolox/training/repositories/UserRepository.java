@@ -12,6 +12,6 @@ public interface UserRepository extends CrudRepository<User, Long> {
 
     Optional<User> findFirstByUsername(String username);
 
-    Optional<List<User>> findByBirthdateBetweenAndNameIgnoreCaseContaining(LocalDate start, LocalDate end,
+    List<User> findByBirthdateBetweenAndNameIgnoreCaseContaining(LocalDate start, LocalDate end,
             String string);
 }
