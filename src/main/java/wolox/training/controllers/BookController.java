@@ -5,6 +5,8 @@ import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
@@ -128,15 +130,17 @@ public class BookController {
             @RequestParam(name = "subtitle", required = false) String subtitle,
             @RequestParam(name = "publisher", required = false) String publisher,
             @RequestParam(name = "year", required = false) String year,
-            @RequestParam(name = "pages", required = false) Integer pages) {
-
+            @RequestParam(name = "pages", required = false) Integer pages,
+            @PageableDefault(page = 0, size = 100) Pageable pageable
+    ) {
         return new ResponseEntity<>(
-                this.bookRepository.findBooksBy(isbn, genre, author, image, title, subtitle, publisher, year, pages),
+                this.bookRepository
+                        .findBooksBy(isbn, genre, author, image, title, subtitle, publisher, year, pages, pageable),
                 HttpStatus.OK);
     }
 
     @GetMapping("/isbn/{isbnNumber}")
-    private ResponseEntity<Object> getBookByIsbn(@PathVariable String  isbnNumber) {
+    private ResponseEntity<Object> getBookByIsbn(@PathVariable String isbnNumber) {
         Optional<Book> bookOptional = bookRepository.findFirstByIsbn(isbnNumber);
         if (bookOptional.isPresent()) {
             return new ResponseEntity<>(bookOptional.get(), HttpStatus.OK);
