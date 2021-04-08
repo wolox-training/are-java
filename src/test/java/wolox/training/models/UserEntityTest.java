@@ -59,7 +59,7 @@ public class UserEntityTest {
         user1.setUsername("Alis");
         user1.setBirthdate(LocalDate.of(1997, 5, 23));
         assertThrows(DataIntegrityViolationException.class, () ->
-            this.userRepository.save(user1)
+                this.userRepository.save(user1)
         );
     }
 
@@ -69,7 +69,7 @@ public class UserEntityTest {
         user1.setName("Alis");
         user1.setBirthdate(LocalDate.of(1997, 5, 23));
         assertThrows(DataIntegrityViolationException.class, () ->
-            this.userRepository.save(user1)
+                this.userRepository.save(user1)
         );
     }
 
@@ -79,8 +79,8 @@ public class UserEntityTest {
         user1.setName("Alis");
         user1.setUsername("Michella");
         assertThrows(DataIntegrityViolationException.class, () ->
-            this.userRepository.save(user1)
-            );
+                this.userRepository.save(user1)
+        );
     }
 
     @Test
@@ -115,9 +115,9 @@ public class UserEntityTest {
         user.addBook(book);
         userRepository.save(user);
         Exception exception = assertThrows(BookAlreadyOwnedException.class, () ->
-            user.addBook(book)
+                user.addBook(book)
         );
-        assertEquals("The user already has that book",exception.getMessage());
+        assertEquals("The user already has that book", exception.getMessage());
     }
 
     @Test
@@ -134,10 +134,10 @@ public class UserEntityTest {
         User user = this.anUserWithRandomCorrectFields();
         Book book = this.aBookWithRandomCorrectFields();
         Exception exception = assertThrows(BookNeverOwnedException.class, () ->
-            user.removeBook(book)
+                user.removeBook(book)
         );
         assertEquals(
-                "The user has not that book hence it can not be removed from the book list",exception.getMessage());
+                "The user has not that book hence it can not be removed from the book list", exception.getMessage());
     }
 
     private List<User> filterUserByDatesAndName(LocalDate from, LocalDate to, String partOfTheName, List<User> users) {

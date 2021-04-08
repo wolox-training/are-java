@@ -4,8 +4,6 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -122,12 +120,19 @@ public class BookController {
     @GetMapping
     @ResponseBody
     public ResponseEntity<Object> list(
-            @RequestParam(name = "isbn", required = false) Optional<String> isbn) {
-        if (isbn.isPresent()) {
-            return this.getBookByIsbn(isbn.get());
-        }
-        return new ResponseEntity<>(StreamSupport.stream(this.bookRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList()), HttpStatus.OK);
+            @RequestParam(name = "isbn", required = false) String isbn,
+            @RequestParam(name = "genre", required = false) String genre,
+            @RequestParam(name = "author", required = false) String author,
+            @RequestParam(name = "image", required = false) String image,
+            @RequestParam(name = "title", required = false) String title,
+            @RequestParam(name = "subtitle", required = false) String subtitle,
+            @RequestParam(name = "publisher", required = false) String publisher,
+            @RequestParam(name = "year", required = false) String year,
+            @RequestParam(name = "pages", required = false) Integer pages) {
+
+        return new ResponseEntity<>(
+                this.bookRepository.findBooksBy(isbn, genre, author, image, title, subtitle, publisher, year, pages),
+                HttpStatus.OK);
     }
 
 
@@ -142,3 +147,7 @@ public class BookController {
         }
     }
 }
+/*if (isbn.isPresent()) {
+        return this.getBookByIsbn(isbn.get());
+        }
+        */

@@ -35,7 +35,7 @@ public class BookEntityTest {
         book1.setIsbn("9780747532743");
 
         assertThrows(DataIntegrityViolationException.class, () ->
-            bookRepository.save(book1)
+                bookRepository.save(book1)
         );
     }
 
@@ -59,7 +59,7 @@ public class BookEntityTest {
     void whenBookHasYearFieldGreaterThanTheCurrentYear_thenItThrowsException() {
         Book book1 = new Book();
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            book1.setYear("4444")
+                book1.setYear("4444")
         );
         assertTrue(exception.getMessage().contains("The year field must be less than or equal to the current year"));
     }
@@ -69,7 +69,7 @@ public class BookEntityTest {
     void whenBookHasLettersInTheYearField_thenItThrowsException() {
         Book book1 = new Book();
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
-            book1.setYear("f4444")
+                book1.setYear("f4444")
         );
         assertTrue(exception.getMessage().contains("The year field must contain only numbers"));
     }
