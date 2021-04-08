@@ -135,19 +135,16 @@ public class BookController {
                 HttpStatus.OK);
     }
 
-
-    private ResponseEntity<Object> getBookByIsbn(String isbn) {
-        Optional<Book> bookOptional = bookRepository.findFirstByIsbn(isbn);
+    @GetMapping("/isbn/{isbnNumber}")
+    private ResponseEntity<Object> getBookByIsbn(@PathVariable String  isbnNumber) {
+        Optional<Book> bookOptional = bookRepository.findFirstByIsbn(isbnNumber);
         if (bookOptional.isPresent()) {
             return new ResponseEntity<>(bookOptional.get(), HttpStatus.OK);
         } else {
-            Book book = bookService.searchBook(isbn);
+            Book book = bookService.searchBook(isbnNumber);
             bookRepository.save(book);
             return new ResponseEntity<>(book, HttpStatus.CREATED);
         }
     }
 }
-/*if (isbn.isPresent()) {
-        return this.getBookByIsbn(isbn.get());
-        }
-        */
+
