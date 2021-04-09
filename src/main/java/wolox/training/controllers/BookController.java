@@ -122,7 +122,7 @@ public class BookController {
     @GetMapping
     @ResponseBody
     public ResponseEntity<Object> list(
-            @RequestParam(name = "isbn", required = false) String isbn,
+            @RequestParam(name = "isbn", required = false) Long isbn,
             @RequestParam(name = "genre", required = false) String genre,
             @RequestParam(name = "author", required = false) String author,
             @RequestParam(name = "image", required = false) String image,
@@ -140,7 +140,7 @@ public class BookController {
     }
 
     @GetMapping("/isbn/{isbnNumber}")
-    private ResponseEntity<Object> getBookByIsbn(@PathVariable String isbnNumber) {
+    private ResponseEntity<Object> getBookByIsbn(@PathVariable Long isbnNumber) {
         Optional<Book> bookOptional = bookRepository.findFirstByIsbn(isbnNumber);
         if (bookOptional.isPresent()) {
             return new ResponseEntity<>(bookOptional.get(), HttpStatus.OK);

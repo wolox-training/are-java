@@ -75,7 +75,7 @@ public class UserControllerTests {
         book1.setPublisher("Bloomsbury Publishing");
         book1.setYear("1997");
         book1.setPages(223);
-        book1.setIsbn("9780747532743");
+        book1.setIsbn(9780747532743L);
 
         bookJsonString = objectMapper.writeValueAsString(book1);
         Mockito.when(encoder.encode(any(String.class))).thenReturn(password);

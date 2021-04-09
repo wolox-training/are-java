@@ -43,7 +43,7 @@ public class UserEntityTest {
         book1.setPublisher("Bloomsbury Publishing");
         book1.setYear("1997");
         book1.setPages(223);
-        book1.setIsbn("9780747532743");
+        book1.setIsbn(9780747532743L);
         return book1;
     }
 

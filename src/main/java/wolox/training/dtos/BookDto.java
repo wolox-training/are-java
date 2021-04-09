@@ -13,7 +13,7 @@ public class BookDto {
     private String pagination;
     private List<PublisherDto> publishers;
     private String publish_date;
-    private String isbn;
+    private Long isbn;
 
 
     public String getTitle() {
@@ -72,11 +72,11 @@ public class BookDto {
         this.publish_date = publish_date;
     }
 
-    public String getIsbn() {
+    public Long getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
+    public void setIsbn(Long isbn) {
         this.isbn = isbn;
     }
 }
