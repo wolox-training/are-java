@@ -12,7 +12,7 @@ public interface BookRepository extends CrudRepository<Book, Long> {
 
     Optional<Book> findFirstByAuthor(String author);
 
-    Optional<Book> findFirstByIsbn(String isbn);
+    Optional<Book> findFirstByIsbn(Long isbn);
 
     List<Book> findByPublisherAndYearAndGenre(String publisher, String year, String genre);
 
@@ -26,14 +26,14 @@ public interface BookRepository extends CrudRepository<Book, Long> {
             + " and (:year is null or :year='' or b.year = :year)"
             + " and (:genre is null or :genre='' or b.genre = :genre)"
             + " and (:author is null or :author='' or b.author = :author)"
-            + " and (:isbn is null or :isbn='' or b.isbn = :isbn)"
+            + " and (:isbn is null  or b.isbn = :isbn)"
             + " and (:image is null or :image='' or b.image = :image)"
             + " and (:title is null or :title='' or b.title = :title)"
             + " and (:subtitle is null or :subtitle='' or b.subtitle = :subtitle)"
             + " and (:pages is null or b.pages = :pages)"
     )
     List<Book> findBooksBy(
-            @Param("isbn") String isbn,
+            @Param("isbn") Long isbn,
             @Param("genre") String genre,
             @Param("author") String author,
             @Param("image") String image,

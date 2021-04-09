@@ -32,7 +32,7 @@ public class BookEntityTest {
         book1.setPublisher("Bloomsbury Publishing");
         book1.setYear("1997");
         book1.setPages(223);
-        book1.setIsbn("9780747532743");
+        book1.setIsbn(9780747532743L);
 
         assertThrows(DataIntegrityViolationException.class, () ->
                 bookRepository.save(book1)
@@ -85,7 +85,7 @@ public class BookEntityTest {
         book1.setPublisher("Bloomsbury Publishing");
         book1.setYear("1997");
         book1.setPages(223);
-        book1.setIsbn("9780747532743");
+        book1.setIsbn(9780747532743L);
         book1 = bookRepository.save(book1);
         Book book2 = bookRepository.findById(book1.getId()).get();
         assertSame(book1.getId(), book2.getId());
