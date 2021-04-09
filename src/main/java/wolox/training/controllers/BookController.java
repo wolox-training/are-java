@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
 import wolox.training.validators.BookValidator;
@@ -50,8 +51,8 @@ public class BookController {
     })
     @ResponseBody
     public Book findOne(@PathVariable Long id) {
-        bookValidator.existsId(id);
-        return bookRepository.findById(id).get();
+        return bookRepository.findById(id)
+                .orElseThrow(IdNotFoundException::new);
     }
 
     /**
