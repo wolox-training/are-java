@@ -41,7 +41,7 @@ public class Book {
     private Integer pages;
 
     @Column(nullable = false)
-    private String isbn;
+    private Long isbn;
 
     public Book() {
     }
@@ -120,11 +120,12 @@ public class Book {
         this.pages = checkNotNull(pages);
     }
 
-    public String getIsbn() {
+    public Long getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
+    public void setIsbn(Long isbn) {
+        Preconditions.checkArgument(year.matches("[0-9]+"), "The isbn field must contain only numbers");
         this.isbn = checkNotNull(isbn);
     }
 }

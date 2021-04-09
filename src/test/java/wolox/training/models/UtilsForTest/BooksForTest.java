@@ -17,7 +17,7 @@ public class BooksForTest {
         book1.setPublisher("Bloomsbury Publishing");
         book1.setYear("1997");
         book1.setPages(223);
-        book1.setIsbn("9780747532743");
+        book1.setIsbn(9780747532743L);
 
         Book book2 = new Book();
         book2.setGenre("Fantasy");
@@ -28,7 +28,7 @@ public class BooksForTest {
         book2.setPublisher("Bloomsbury Publishing");
         book2.setYear("2007");
         book2.setPages(607);
-        book2.setIsbn("9780739360385");
+        book2.setIsbn(9780739360385L);
 
         Book book3 = new Book();
         book3.setGenre("Fantasy");
@@ -39,7 +39,7 @@ public class BooksForTest {
         book3.setPublisher("Bloomsbury Publishing");
         book3.setYear("2003");
         book3.setPages(766);
-        book3.setIsbn("9781855496484");
+        book3.setIsbn(9781855496484L);
 
         Book book4 = new Book();
         book4.setGenre("Horror");
@@ -50,7 +50,7 @@ public class BooksForTest {
         book4.setPublisher("The Pioneer");
         book4.setYear("1843");
         book4.setPages(68);
-        book4.setIsbn("9781976158391");
+        book4.setIsbn(9781976158391L);
 
         Book book5 = new Book();
         book5.setGenre("Fantasy");
@@ -61,7 +61,7 @@ public class BooksForTest {
         book5.setPublisher("Bloomsbury Publishing");
         book5.setYear("1997");
         book5.setPages(1);
-        book5.setIsbn("9781976158391");
+        book5.setIsbn(9781976158391L);
 
         return Arrays.asList(book1, book2, book3, book4, book5);
     }

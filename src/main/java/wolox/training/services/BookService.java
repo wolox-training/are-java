@@ -13,7 +13,7 @@ public class BookService {
     @Autowired
     private OpenLibraryService openLibraryService;
 
-    public Book searchBook(String isbn) {
+    public Book searchBook(Long isbn) {
         BookDto bookDto = openLibraryService.bookInfo(isbn);
         return this.mapBookDto.mapToBook(bookDto);
     }
