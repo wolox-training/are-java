@@ -10,7 +10,6 @@ public class BookDto {
     private String subtitle;
     private List<AuthorDto> authors;
     private int number_of_pages;
-    private String pagination;
     private List<PublisherDto> publishers;
     private String publish_date;
     private Long isbn;
@@ -46,14 +45,6 @@ public class BookDto {
 
     public void setNumber_of_pages(int number_of_pages) {
         this.number_of_pages = number_of_pages;
-    }
-
-    public String getPagination() {
-        return pagination;
-    }
-
-    public void setPagination(String pagination) {
-        this.pagination = pagination;
     }
 
     public List<PublisherDto> getPublishers() {
