@@ -27,6 +27,7 @@ import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.exceptions.NullFieldException;
 import wolox.training.models.Book;
 import wolox.training.repositories.BookRepository;
+import wolox.training.services.BookService;
 import wolox.training.validators.BookValidator;
 
 @WebMvcTest(controllers = BookController.class)
@@ -44,6 +45,8 @@ public class BookControllerTests {
     private BookRepository bookRepository;
     @MockBean
     private BookValidator bookValidator;
+    @MockBean
+    private BookService bookService;
 
 
     @BeforeAll
@@ -75,7 +78,6 @@ public class BookControllerTests {
         book1.setPages(223);
         book1.setIsbn("9780747532743");
         bookJsonString = objectMapper.writeValueAsString(book1);
-
 
 
     }
