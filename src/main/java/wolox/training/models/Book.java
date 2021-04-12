@@ -10,10 +10,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.NonNull;
 import lombok.Setter;
 
 @Getter
+@NoArgsConstructor
 @Entity
 public class Book {
 
@@ -50,9 +52,6 @@ public class Book {
 
     @Column(nullable = false)
     private Long isbn;
-
-    public Book() {
-    }
 
     public void setGenre(String genre) {
         Preconditions.checkArgument(genre.length() > 1, "The genre field must have more than 1 character");

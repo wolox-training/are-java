@@ -24,11 +24,13 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookNeverOwnedException;
 
 @Getter
 @Entity(name = "USERS")
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -55,9 +57,6 @@ public class User {
     @Getter(value = AccessLevel.NONE)
     private List<Book> books = new ArrayList<>();
 
-
-    public User() {
-    }
 
     public List<Book> getBooks() {
         return (List<Book>) Collections.unmodifiableList(books);
