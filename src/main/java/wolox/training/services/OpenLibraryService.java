@@ -3,7 +3,9 @@ package wolox.training.services;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.base.Strings;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 import org.springframework.web.client.RestTemplate;
 import wolox.training.dtos.BookDto;
 import wolox.training.exceptions.MapBookDtoException;
@@ -26,13 +28,14 @@ public class OpenLibraryService {
         }
     }
 
-    public BookDto bookInfo(String isbn) {
-        String urlWithIsbn = String.format(url, isbn);
+    public BookDto bookInfo(Long isbn) {
+        String isbnString=Strings.padStart(isbn.toString(),10,'0');
+        String urlWithIsbn = String.format(url, isbnString);
         String response = restTemplate.getForObject(urlWithIsbn, String.class);
         if (response.equals("{}") || response == null) {
             throw new OpenLibraryException();
         }
-        BookDto bookDto = this.fromJsontoBookDto(response, isbn);
+        BookDto bookDto = this.fromJsontoBookDto(response, isbnString);
         bookDto.setIsbn(isbn);
         return bookDto;
     }

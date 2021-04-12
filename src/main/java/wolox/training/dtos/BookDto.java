@@ -16,7 +16,7 @@ public class BookDto {
     private List<PublisherDto> publishers;
     @JsonProperty("publish_date")
     private String publishDate;
-    private String isbn;
+    private Long isbn;
 
     public String getTitle() {
         return title;
@@ -75,11 +75,11 @@ public class BookDto {
         this.publishDate = publishDate;
     }
 
-    public String getIsbn() {
+    public Long getIsbn() {
         return isbn;
     }
 
-    public void setIsbn(String isbn) {
+    public void setIsbn(Long isbn) {
         this.isbn = isbn;
     }
 }
