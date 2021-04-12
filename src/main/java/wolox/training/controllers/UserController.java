@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -141,6 +142,12 @@ public class UserController {
     public List<User> list() {
         return StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
                 .collect(Collectors.toList());
+    }
+
+    @GetMapping(value = "/username")
+    @ResponseBody
+    public String currentUserName(Authentication authentication) {
+        return authentication.getName();
     }
 
 
