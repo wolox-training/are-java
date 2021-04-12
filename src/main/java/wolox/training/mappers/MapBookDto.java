@@ -32,8 +32,8 @@ public class MapBookDto {
                         .collect(Collectors.toList())));
         book.setTitle(bookDto.getTitle());
         book.setSubtitle(bookDto.getSubtitle());
-        book.setYear(bookDto.getPublish_date());
-        book.setPages(bookDto.getNumber_of_pages());
+        book.setYear(bookDto.getPublishDate());
+        book.setPages(bookDto.getNumberOfPages());
         book.setIsbn(bookDto.getIsbn());
         return book;
 
