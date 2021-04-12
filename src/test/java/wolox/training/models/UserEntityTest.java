@@ -4,6 +4,9 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
+import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookNeverOwnedException;
+import wolox.training.models.UtilsForTest.UsersForTest;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
 
@@ -133,6 +137,30 @@ public class UserEntityTest {
         });
         assertTrue(exception.getMessage()
                 .equals("The user has not that book hence it can not be removed from the book list"));
+    }
+
+    private List<User> filterUserByDatesAndName(LocalDate from, LocalDate to, String partOfTheName, List<User> users) {
+        return users.stream().filter(
+                user -> (user.getBirthdate().isBefore(to) || user.getBirthdate() == to)
+                        && (user.getBirthdate().isAfter(from) || user.getBirthdate().equals(from))
+                        && user.getUsername().toLowerCase().contains(partOfTheName.toLowerCase())
+        ).collect(Collectors.toList());
+    }
+
+    @Test
+    void whenSearchingForAUserByDatesAndName_thenItRetrievesUsersUnderThoseConditions() {
+        UsersForTest usersForTest = new UsersForTest();
+        List<User> users = usersForTest.usersList();
+        LocalDate from = LocalDate.of(1979, 9, 19);
+        LocalDate to = LocalDate.of(1981, 2, 13);
+        String partOfName = "H";
+        users.forEach(user -> userRepository.save(user));
+        List<User> resultQuery = userRepository
+                .findByBirthdateBetweenAndNameIgnoreCaseContaining(from, to, partOfName);
+        List<User> usersFilter = this.filterUserByDatesAndName(from, to, partOfName, users);
+        Assert.assertTrue(resultQuery.size() == usersFilter.size());
+        Assert.assertTrue(resultQuery.stream().allMatch(user -> usersFilter.contains(user)));
+
     }
 
 }

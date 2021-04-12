@@ -4,12 +4,15 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.test.context.junit4.SpringRunner;
+import wolox.training.models.UtilsForTest.BooksForTest;
 import wolox.training.repositories.BookRepository;
 
 @RunWith(SpringRunner.class)
@@ -98,4 +101,25 @@ public class BookEntityTest {
         assertEquals(book1.getTitle() , book2.getTitle());
     }
 
+    private List<Book> filterBooksByYearPublisherAndGenre(String year, String publisher, String genre,
+            List<Book> bookList) {
+        return bookList.stream().filter(book -> book.getPublisher().equals(publisher)
+                && book.getYear().equals(year)
+                && book.getGenre().equals(genre)).collect(Collectors.toList());
+
+    }
+
+    @Test
+    void whenSearchingBooksByYearPublisherAndGenre_thenItRetrievesBooksUnderThoseConditions() {
+        BooksForTest booksForTest = new BooksForTest();
+        String year = "1997";
+        String publisher = "Bloomsbury Publishing";
+        String genre = "Fantasy";
+        List<Book> bookList = booksForTest.books();
+        bookList.forEach(book -> bookRepository.save(book));
+        List<Book> filterBooks = this.filterBooksByYearPublisherAndGenre(year, publisher, genre, bookList);
+        List<Book> responseBooks = this.bookRepository.findByPublisherAndYearAndGenre(publisher, year, genre);
+        assertTrue(filterBooks.size() == responseBooks.size());
+        assertTrue(filterBooks.stream().allMatch(book -> responseBooks.contains(book)));
+    }
 }
