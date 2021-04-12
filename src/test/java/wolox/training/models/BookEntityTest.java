@@ -1,5 +1,7 @@
 package wolox.training.models;
 
+
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
@@ -49,11 +51,11 @@ public class BookEntityTest {
     }
 
     @Test
-     void whenBookHasAnEmptyAuthorField_thenItThrowsException() {
+    void whenBookHasAnEmptyAuthorField_thenItThrowsException() {
         Book book1 = new Book();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            book1.setAuthor("");
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+                book1.setAuthor("")
+        );
         assertTrue(exception.getMessage().contains("The author name cannot be empty"));
     }
 
@@ -70,14 +72,14 @@ public class BookEntityTest {
     @Test
      void whenBookHasLettersInTheYearField_thenItThrowsException() {
         Book book1 = new Book();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
-            book1.setYear("f4444");
-        });
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            book1.setYear("f4444")
+        );
         assertTrue(exception.getMessage().contains("The year field must contain only numbers"));
     }
 
     @Test
-     void whenBookItIsSaved_thenYouCanGetItBackWithId() {
+    void whenBookItIsSaved_thenYouCanGetItBackWithId() {
         Book book1 = new Book();
         book1.setGenre("Fantasy");
         book1.setAuthor("J. K. Rowling");
@@ -103,9 +105,9 @@ public class BookEntityTest {
 
     private List<Book> filterBooksByYearPublisherAndGenre(String year, String publisher, String genre,
             List<Book> bookList) {
-        return bookList.stream().filter(book -> book.getPublisher().equals(publisher)
-                && book.getYear().equals(year)
-                && book.getGenre().equals(genre)).collect(Collectors.toList());
+        return bookList.stream().filter(book -> (publisher == null || book.getPublisher().equals(publisher))
+                && (year == null || book.getYear().equals(year))
+                && (genre == null || book.getGenre().equals(genre))).collect(Collectors.toList());
 
     }
 
@@ -119,7 +121,44 @@ public class BookEntityTest {
         bookList.forEach(book -> bookRepository.save(book));
         List<Book> filterBooks = this.filterBooksByYearPublisherAndGenre(year, publisher, genre, bookList);
         List<Book> responseBooks = this.bookRepository.findByPublisherAndYearAndGenre(publisher, year, genre);
-        assertTrue(filterBooks.size() == responseBooks.size());
-        assertTrue(filterBooks.stream().allMatch(book -> responseBooks.contains(book)));
+        assertSame(filterBooks.size(), responseBooks.size());
+        assertTrue(responseBooks.containsAll(filterBooks));
+    }
+
+
+    @Test
+    void whenSearchingForABookByYearWithNullPublisherAndGenre_thenItRetrievesUserUnderThoseConditions() {
+        BooksForTest booksForTest = new BooksForTest();
+        String year = "1997";
+        List<Book> bookList = booksForTest.books();
+        bookList.forEach(book -> bookRepository.save(book));
+        List<Book> filterBooks = this.filterBooksByYearPublisherAndGenre(year, null, null, bookList);
+        List<Book> responseBooks = this.bookRepository.findBookByPublisherAndYearAndGenre(null, year, null);
+        assertSame(filterBooks.size(), responseBooks.size());
+        assertTrue(responseBooks.containsAll(filterBooks));
+    }
+
+    @Test
+    void whenSearchingForABookByPublisherWithNullYearAndGenre_thenItRetrievesUserUnderThoseConditions() {
+        BooksForTest booksForTest = new BooksForTest();
+        String publisher = "Bloomsbury Publishing";
+        List<Book> bookList = booksForTest.books();
+        bookList.forEach(book -> bookRepository.save(book));
+        List<Book> filterBooks = this.filterBooksByYearPublisherAndGenre(null, publisher, null, bookList);
+        List<Book> responseBooks = this.bookRepository.findBookByPublisherAndYearAndGenre(publisher, null, null);
+        assertSame(filterBooks.size(), responseBooks.size());
+        assertTrue(responseBooks.containsAll(filterBooks));
+    }
+
+    @Test
+    void whenSearchingForABookByGenreWithNullYearAndPublisher_thenItRetrievesUserUnderThoseConditions() {
+        BooksForTest booksForTest = new BooksForTest();
+        String genre = "Fantasy";
+        List<Book> bookList = booksForTest.books();
+        bookList.forEach(book -> bookRepository.save(book));
+        List<Book> filterBooks = this.filterBooksByYearPublisherAndGenre(null, null, genre, bookList);
+        List<Book> responseBooks = this.bookRepository.findBookByPublisherAndYearAndGenre(null, null, genre);
+        assertSame(filterBooks.size(), responseBooks.size());
+        assertTrue(responseBooks.containsAll(filterBooks));
     }
 }

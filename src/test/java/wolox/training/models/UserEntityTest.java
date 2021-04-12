@@ -1,12 +1,14 @@
 package wolox.training.models;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
-import org.junit.Assert;
 import org.junit.jupiter.api.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,9 +58,9 @@ public class UserEntityTest {
         User user1 = new User();
         user1.setUsername("Alis");
         user1.setBirthdate(LocalDate.of(1997, 5, 23));
-        assertThrows(DataIntegrityViolationException.class, () -> {
-            this.userRepository.save(user1);
-        });
+        assertThrows(DataIntegrityViolationException.class, () ->
+            this.userRepository.save(user1)
+        );
     }
 
     @Test
@@ -66,9 +68,9 @@ public class UserEntityTest {
         User user1 = new User();
         user1.setName("Alis");
         user1.setBirthdate(LocalDate.of(1997, 5, 23));
-        assertThrows(DataIntegrityViolationException.class, () -> {
-            this.userRepository.save(user1);
-        });
+        assertThrows(DataIntegrityViolationException.class, () ->
+            this.userRepository.save(user1)
+        );
     }
 
     @Test
@@ -76,9 +78,9 @@ public class UserEntityTest {
         User user1 = new User();
         user1.setName("Alis");
         user1.setUsername("Michella");
-        assertThrows(DataIntegrityViolationException.class, () -> {
-            this.userRepository.save(user1);
-        });
+        assertThrows(DataIntegrityViolationException.class, () ->
+            this.userRepository.save(user1)
+            );
     }
 
     @Test
@@ -88,10 +90,10 @@ public class UserEntityTest {
         user1.setUsername("Alis");
         user1.setBirthdate(LocalDate.of(1997, 5, 23));
         User user2 = this.userRepository.save(user1);
-        assertTrue(user2.getName().equals(user1.getName()));
-        assertTrue(user2.getUsername().equals(user1.getUsername()));
-        assertTrue(user2.getBirthdate().equals(user1.getBirthdate()));
-        assertTrue(user2.getId() == user1.getId());
+        assertEquals(user2.getName(), user1.getName());
+        assertEquals(user2.getUsername(), user1.getUsername());
+        assertEquals(user2.getBirthdate(), user1.getBirthdate());
+        assertSame(user2.getId(), user1.getId());
 
     }
 
@@ -112,11 +114,10 @@ public class UserEntityTest {
         bookRepository.save(book);
         user.addBook(book);
         userRepository.save(user);
-        Exception exception = assertThrows(BookAlreadyOwnedException.class, () -> {
-            user.addBook(book);
-            ;
-        });
-        assertTrue(exception.getMessage().equals("The user already has that book"));
+        Exception exception = assertThrows(BookAlreadyOwnedException.class, () ->
+            user.addBook(book)
+        );
+        assertEquals("The user already has that book",exception.getMessage());
     }
 
     @Test
@@ -125,30 +126,31 @@ public class UserEntityTest {
         Book book = this.aBookWithRandomCorrectFields();
         user.addBook(book);
         user.removeBook(book);
-        assertTrue(!user.getBooks().contains(book));
+        assertFalse(user.getBooks().contains(book));
     }
 
     @Test
     void whenRemoveABookThatTheUserHasNot_thenItThrowsAnException() {
         User user = this.anUserWithRandomCorrectFields();
         Book book = this.aBookWithRandomCorrectFields();
-        Exception exception = assertThrows(BookNeverOwnedException.class, () -> {
-            user.removeBook(book);
-        });
-        assertTrue(exception.getMessage()
-                .equals("The user has not that book hence it can not be removed from the book list"));
+        Exception exception = assertThrows(BookNeverOwnedException.class, () ->
+            user.removeBook(book)
+        );
+        assertEquals(
+                "The user has not that book hence it can not be removed from the book list",exception.getMessage());
     }
 
     private List<User> filterUserByDatesAndName(LocalDate from, LocalDate to, String partOfTheName, List<User> users) {
         return users.stream().filter(
-                user -> (user.getBirthdate().isBefore(to) || user.getBirthdate() == to)
-                        && (user.getBirthdate().isAfter(from) || user.getBirthdate().equals(from))
-                        && user.getUsername().toLowerCase().contains(partOfTheName.toLowerCase())
+                user -> (to == null || user.getBirthdate().isBefore(to) || user.getBirthdate().equals(to))
+                        && (from == null || user.getBirthdate().isAfter(from) || user.getBirthdate().equals(from))
+                        && (partOfTheName == null || user.getUsername().toLowerCase()
+                        .contains(partOfTheName.toLowerCase()))
         ).collect(Collectors.toList());
     }
 
     @Test
-    void whenSearchingForAUserByDatesAndName_thenItRetrievesUsersUnderThoseConditions() {
+    void whenSearchingForUsersByDatesAndName_thenItRetrievesUsersUnderThoseConditions() {
         UsersForTest usersForTest = new UsersForTest();
         List<User> users = usersForTest.usersList();
         LocalDate from = LocalDate.of(1979, 9, 19);
@@ -158,9 +160,49 @@ public class UserEntityTest {
         List<User> resultQuery = userRepository
                 .findByBirthdateBetweenAndNameIgnoreCaseContaining(from, to, partOfName);
         List<User> usersFilter = this.filterUserByDatesAndName(from, to, partOfName, users);
-        Assert.assertTrue(resultQuery.size() == usersFilter.size());
-        Assert.assertTrue(resultQuery.stream().allMatch(user -> usersFilter.contains(user)));
+        assertSame(resultQuery.size(), usersFilter.size());
+        assertTrue(usersFilter.containsAll(resultQuery));
 
     }
 
+    @Test
+    void whenSearchingForUsersByPartOfTheirNameWithNullFieldsDateFromAndDateTo_thenItRetrievesThem() {
+        UsersForTest usersForTest = new UsersForTest();
+        List<User> users = usersForTest.usersList();
+        String partOfName = "A";
+        users.forEach(user -> userRepository.save(user));
+
+        List<User> resultQuery = userRepository
+                .findUserByBirthdayBetweenAndContaining(null, null, partOfName);
+        List<User> usersFilter = this.filterUserByDatesAndName(null, null, partOfName, users);
+        assertSame(resultQuery.size(), usersFilter.size());
+        assertTrue(usersFilter.containsAll(resultQuery));
+    }
+
+    @Test
+    void whenSearchingForUsersByBirthdayBeforeADateWithNullFieldsDateFromAndPartOfTheirName_thenItRetrievesThem() {
+        UsersForTest usersForTest = new UsersForTest();
+        List<User> users = usersForTest.usersList();
+        LocalDate to = LocalDate.of(1981, 2, 13);
+        users.forEach(user -> userRepository.save(user));
+        List<User> resultQuery = userRepository
+                .findUserByBirthdayBetweenAndContaining(null, to, null);
+        List<User> usersFilter = this.filterUserByDatesAndName(null, to, null, users);
+        assertSame(resultQuery.size(), usersFilter.size());
+        assertTrue(usersFilter.containsAll(resultQuery));
+    }
+
+    @Test
+    void whenSearchingForUsersByBirthdayAfterADateWithNullFieldsDateToAndPartOfTheirName_thenItRetrievesThem() {
+        UsersForTest usersForTest = new UsersForTest();
+        List<User> users = usersForTest.usersList();
+        LocalDate from = LocalDate.of(1981, 2, 13);
+        users.forEach(user -> userRepository.save(user));
+        List<User> resultQuery = userRepository
+                .findUserByBirthdayBetweenAndContaining(from, null, null);
+        List<User> usersFilter = this.filterUserByDatesAndName(from, null, null, users);
+        assertSame(resultQuery.size(), usersFilter.size());
+        assertTrue(usersFilter.containsAll(resultQuery));
+
+    }
 }
