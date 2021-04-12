@@ -51,14 +51,6 @@ public class BookDto {
         this.numberOfPages = numberOfPages;
     }
 
-    public String getPagination() {
-        return pagination;
-    }
-
-    public void setPagination(String pagination) {
-        this.pagination = pagination;
-    }
-
     public List<PublisherDto> getPublishers() {
         return publishers;
     }
