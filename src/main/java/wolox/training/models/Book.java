@@ -9,7 +9,13 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.NonNull;
+import lombok.Setter;
 
+@Getter
+@NoArgsConstructor
 @Entity
 public class Book {
 
@@ -22,16 +28,20 @@ public class Book {
 
     @Column(nullable = false)
     private String author;
-
+    @Column
+    @Setter @NonNull
     private String image;
 
     @Column(nullable = false)
+    @Setter @NonNull
     private String title;
 
     @Column(nullable = false)
+    @Setter @NonNull
     private String subtitle;
 
     @Column(nullable = false)
+    @Setter @NonNull
     private String publisher;
 
     @Column(nullable = false)
@@ -43,66 +53,15 @@ public class Book {
     @Column(nullable = false)
     private Long isbn;
 
-    public Book() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
     public void setGenre(String genre) {
         Preconditions.checkArgument(genre.length() > 1, "The genre field must have more than 1 character");
         this.genre = checkNotNull(genre);
         ;
     }
 
-    public String getAuthor() {
-        return author;
-    }
-
     public void setAuthor(String author) {
         Preconditions.checkArgument(!author.isEmpty(), "The author name cannot be empty");
         this.author = author;
-    }
-
-    public String getImage() {
-        return image;
-    }
-
-    public void setImage(String image) {
-        this.image = checkNotNull(image);
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = checkNotNull(title);
-    }
-
-    public String getSubtitle() {
-        return subtitle;
-    }
-
-    public void setSubtitle(String subtitle) {
-        this.subtitle = checkNotNull(subtitle);
-    }
-
-    public String getPublisher() {
-        return publisher;
-    }
-
-    public void setPublisher(String publisher) {
-        this.publisher = checkNotNull(publisher);
-    }
-
-    public String getYear() {
-        return year;
     }
 
     public void setYear(String year) {
@@ -112,16 +71,8 @@ public class Book {
         this.year = checkNotNull(year);
     }
 
-    public Integer getPages() {
-        return pages;
-    }
-
     public void setPages(Integer pages) {
         this.pages = checkNotNull(pages);
-    }
-
-    public Long getIsbn() {
-        return isbn;
     }
 
     public void setIsbn(Long isbn) {

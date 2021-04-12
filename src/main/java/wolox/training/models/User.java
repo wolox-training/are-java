@@ -22,10 +22,15 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookNeverOwnedException;
 
+@Getter
 @Entity(name = "USERS")
+@NoArgsConstructor
 public class User {
 
     @Id
@@ -49,27 +54,17 @@ public class User {
             joinColumns = @JoinColumn(name = "book_id", referencedColumnName = "id"),
             inverseJoinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "id"))
+    @Getter(value = AccessLevel.NONE)
     private List<Book> books = new ArrayList<>();
 
 
-    public User() {
-    }
-
-    public long getId() {
-        return id;
-    }
-
-    public String getUsername() {
-        return username;
+    public List<Book> getBooks() {
+        return (List<Book>) Collections.unmodifiableList(books);
     }
 
     public void setUsername(String username) {
         Preconditions.checkArgument(username.length() > 1, "The username field must have more than 1 character");
         this.username = checkNotNull(username);
-    }
-
-    public String getName() {
-        return name;
     }
 
     public void setName(String name) {
@@ -78,26 +73,16 @@ public class User {
         this.name = checkNotNull(name);
     }
 
-    public LocalDate getBirthdate() {
-        return birthdate;
-    }
-
     public void setBirthdate(LocalDate birthdate) {
+        Preconditions.checkArgument(birthdate.isBefore(LocalDate.now()),
+                "The birthday field must be less than or equal to the current year");
         this.birthdate = checkNotNull(birthdate);
-    }
-
-    public List<Book> getBooks() {
-        return (List<Book>) Collections.unmodifiableList(books);
     }
 
     public void setBooks(List<Book> books) {
         this.books = checkNotNull(books);
     }
 
-
-    public String getPassword() {
-        return password;
-    }
 
     public void setPassword(String password) {
         this.password = password;
