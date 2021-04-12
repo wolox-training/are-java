@@ -1,6 +1,7 @@
 package wolox.training.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -9,16 +10,18 @@ public class BookDto {
     private String title;
     private String subtitle;
     private List<AuthorDto> authors;
-    private int number_of_pages;
+    @JsonProperty("number_of_pages")
+    private int numberOfPages;
     private String pagination;
     private List<PublisherDto> publishers;
-    private String publish_date;
+    @JsonProperty("publish_date")
+    private String publishDate;
     private String isbn;
-
 
     public String getTitle() {
         return title;
     }
+
 
     public void setTitle(String title) {
         this.title = title;
@@ -40,12 +43,12 @@ public class BookDto {
         this.authors = authors;
     }
 
-    public int getNumber_of_pages() {
-        return number_of_pages;
+    public int getNumberOfPages() {
+        return numberOfPages;
     }
 
-    public void setNumber_of_pages(int number_of_pages) {
-        this.number_of_pages = number_of_pages;
+    public void setNumberOfPages(int numberOfPages) {
+        this.numberOfPages = numberOfPages;
     }
 
     public String getPagination() {
@@ -64,12 +67,12 @@ public class BookDto {
         this.publishers = publishers;
     }
 
-    public String getPublish_date() {
-        return publish_date;
+    public String getPublishDate() {
+        return publishDate;
     }
 
-    public void setPublish_date(String publish_date) {
-        this.publish_date = publish_date;
+    public void setPublishDate(String publishDate) {
+        this.publishDate = publishDate;
     }
 
     public String getIsbn() {
