@@ -5,7 +5,7 @@ import java.util.Map;
 
 public class OpenLibraryResponse {
     public String whenItFoundsTheBook(Map bookState){
-        String isbnString= Strings.padStart(bookState.get("Isbn").toString(),10,'0');
+        String isbncorrectResponse= Strings.padStart(bookState.get("Isbn").toString(),10,'0');
 
         String string=  "{"
                 + "   \"ISBN:%s\":{"
@@ -74,7 +74,7 @@ public class OpenLibraryResponse {
                 + "      }"
                 + "   }"
                 + "}";
-        return String.format(string,isbnString,bookState.get("Title"),bookState.get("Subtitle"),bookState.get("Author"),bookState.get("Pages"),bookState.get("Publisher"),bookState.get("Year"));
+        return String.format(string,isbncorrectResponse,bookState.get("Title"),bookState.get("Subtitle"),bookState.get("Author"),bookState.get("Pages"),bookState.get("Publisher"),bookState.get("Year"));
     }
     public String whenItDoesNotFoundTheBook(){
         return "{}";
