@@ -1,5 +1,6 @@
 package wolox.training.models;
 
+
 import static org.junit.jupiter.api.Assertions.assertSame;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -24,7 +25,7 @@ public class BookEntityTest {
     private BookRepository bookRepository;
 
     @Test
-    void bookCannotBeSavedWithNullAuthor() {
+     void bookCannotBeSavedWithNullAuthor() {
         Book book1 = new Book();
         book1.setGenre("Fantasy");
         book1.setImage("image.jpg");
@@ -41,9 +42,11 @@ public class BookEntityTest {
     }
 
     @Test
-    void whenBookHasJust1CharInGenreField_thenItThrowsExceptionWithCustomErrorMessage() {
+     void whenBookHasJust1CharInGenreField_thenItThrowsExceptionWithCustomErrorMessage() {
         Book book1 = new Book();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> book1.setGenre("F"));
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            book1.setGenre("F")
+        );
         assertTrue(exception.getMessage().contains("The genre field must have more than 1 character"));
     }
 
@@ -57,7 +60,7 @@ public class BookEntityTest {
     }
 
     @Test
-    void whenBookHasYearFieldGreaterThanTheCurrentYear_thenItThrowsException() {
+     void whenBookHasYearFieldGreaterThanTheCurrentYear_thenItThrowsException() {
         Book book1 = new Book();
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             book1.setYear("4444")
@@ -67,7 +70,7 @@ public class BookEntityTest {
 
 
     @Test
-    void whenBookHasLettersInTheYearField_thenItThrowsException() {
+     void whenBookHasLettersInTheYearField_thenItThrowsException() {
         Book book1 = new Book();
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
             book1.setYear("f4444")
