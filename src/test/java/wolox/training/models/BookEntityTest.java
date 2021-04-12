@@ -1,6 +1,8 @@
 package wolox.training.models;
 
+
 import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -23,7 +25,7 @@ public class BookEntityTest {
     private BookRepository bookRepository;
 
     @Test
-    void bookCannotBeSavedWithNullAuthor() {
+     void bookCannotBeSavedWithNullAuthor() {
         Book book1 = new Book();
         book1.setGenre("Fantasy");
         book1.setImage("image.jpg");
@@ -40,9 +42,11 @@ public class BookEntityTest {
     }
 
     @Test
-    void whenBookHasJust1CharInGenreField_thenItThrowsExceptionWithCustomErrorMessage() {
+     void whenBookHasJust1CharInGenreField_thenItThrowsExceptionWithCustomErrorMessage() {
         Book book1 = new Book();
-        Exception exception = assertThrows(IllegalArgumentException.class, () -> book1.setGenre("F"));
+        Exception exception = assertThrows(IllegalArgumentException.class, () ->
+            book1.setGenre("F")
+        );
         assertTrue(exception.getMessage().contains("The genre field must have more than 1 character"));
     }
 
@@ -56,7 +60,7 @@ public class BookEntityTest {
     }
 
     @Test
-    void whenBookHasYearFieldGreaterThanTheCurrentYear_thenItThrowsException() {
+     void whenBookHasYearFieldGreaterThanTheCurrentYear_thenItThrowsException() {
         Book book1 = new Book();
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 book1.setYear("4444")
@@ -66,7 +70,7 @@ public class BookEntityTest {
 
 
     @Test
-    void whenBookHasLettersInTheYearField_thenItThrowsException() {
+     void whenBookHasLettersInTheYearField_thenItThrowsException() {
         Book book1 = new Book();
         Exception exception = assertThrows(IllegalArgumentException.class, () ->
                 book1.setYear("f4444")
@@ -88,15 +92,15 @@ public class BookEntityTest {
         book1.setIsbn(9780747532743L);
         book1 = bookRepository.save(book1);
         Book book2 = bookRepository.findById(book1.getId()).get();
-        assertSame(book1.getId(), book2.getId());
-        assertSame(book1.getAuthor(), book2.getAuthor());
-        assertSame(book1.getImage(), book2.getImage());
-        assertSame(book1.getYear(), book2.getYear());
-        assertSame(book1.getPages(), book2.getPages());
-        assertSame(book1.getIsbn(), book2.getIsbn());
-        assertSame(book1.getPublisher(), book2.getPublisher());
-        assertSame(book1.getSubtitle(), book2.getSubtitle());
-        assertSame(book1.getTitle(), book2.getTitle());
+        assertEquals(book1.getId() , book2.getId());
+        assertEquals(book1.getAuthor() , book2.getAuthor());
+        assertEquals(book1.getImage() , book2.getImage());
+        assertEquals(book1.getYear() , book2.getYear());
+        assertEquals(book1.getPages() , book2.getPages());
+        assertEquals(book1.getIsbn() , book2.getIsbn());
+        assertEquals(book1.getPublisher() , book2.getPublisher());
+        assertEquals(book1.getSubtitle() , book2.getSubtitle());
+        assertEquals(book1.getTitle() , book2.getTitle());
     }
 
     private List<Book> filterBooksByYearPublisherAndGenre(String year, String publisher, String genre,
