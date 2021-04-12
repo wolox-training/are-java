@@ -1,9 +1,9 @@
 package wolox.training.controllers;
 
-import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.StreamSupport;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -139,9 +139,9 @@ public class UserController {
 
     @GetMapping
     @ResponseBody
-    public List<User> list() {
-        return StreamSupport.stream(this.userRepository.findAll().spliterator(), false)
-                .collect(Collectors.toList());
+    public Page<User> list(
+            @PageableDefault(page = 0, size = 100) Pageable pageable) {
+        return this.userRepository.findAll(pageable);
     }
 
     @GetMapping(value = "/username")

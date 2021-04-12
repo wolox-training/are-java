@@ -14,6 +14,8 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookNeverOwnedException;
@@ -157,8 +159,9 @@ public class UserEntityTest {
         LocalDate to = LocalDate.of(1981, 2, 13);
         String partOfName = "H";
         users.forEach(user -> userRepository.save(user));
+        Pageable pageable = PageRequest.of(0, 100);
         List<User> resultQuery = userRepository
-                .findByBirthdateBetweenAndNameIgnoreCaseContaining(from, to, partOfName);
+                .findByBirthdateBetweenAndNameIgnoreCaseContaining(from, to, partOfName, pageable).toList();
         List<User> usersFilter = this.filterUserByDatesAndName(from, to, partOfName, users);
         assertSame(resultQuery.size(), usersFilter.size());
         assertTrue(usersFilter.containsAll(resultQuery));
@@ -171,9 +174,9 @@ public class UserEntityTest {
         List<User> users = usersForTest.usersList();
         String partOfName = "A";
         users.forEach(user -> userRepository.save(user));
-
+        Pageable pageable = PageRequest.of(0, 100);
         List<User> resultQuery = userRepository
-                .findUserByBirthdayBetweenAndContaining(null, null, partOfName);
+                .findUserByBirthdayBetweenAndContaining(null, null, partOfName, pageable).toList();
         List<User> usersFilter = this.filterUserByDatesAndName(null, null, partOfName, users);
         assertSame(resultQuery.size(), usersFilter.size());
         assertTrue(usersFilter.containsAll(resultQuery));
@@ -185,8 +188,9 @@ public class UserEntityTest {
         List<User> users = usersForTest.usersList();
         LocalDate to = LocalDate.of(1981, 2, 13);
         users.forEach(user -> userRepository.save(user));
+        Pageable pageable = PageRequest.of(0, 100);
         List<User> resultQuery = userRepository
-                .findUserByBirthdayBetweenAndContaining(null, to, null);
+                .findUserByBirthdayBetweenAndContaining(null, to, null, pageable).toList();
         List<User> usersFilter = this.filterUserByDatesAndName(null, to, null, users);
         assertSame(resultQuery.size(), usersFilter.size());
         assertTrue(usersFilter.containsAll(resultQuery));
@@ -198,8 +202,9 @@ public class UserEntityTest {
         List<User> users = usersForTest.usersList();
         LocalDate from = LocalDate.of(1981, 2, 13);
         users.forEach(user -> userRepository.save(user));
+        Pageable pageable = PageRequest.of(0, 100);
         List<User> resultQuery = userRepository
-                .findUserByBirthdayBetweenAndContaining(from, null, null);
+                .findUserByBirthdayBetweenAndContaining(from, null, null, pageable).toList();
         List<User> usersFilter = this.filterUserByDatesAndName(from, null, null, users);
         assertSame(resultQuery.size(), usersFilter.size());
         assertTrue(usersFilter.containsAll(resultQuery));

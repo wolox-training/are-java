@@ -1,25 +1,26 @@
 package wolox.training.repositories;
 
 
-import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 import wolox.training.models.Book;
 
-public interface BookRepository extends CrudRepository<Book, Long> {
+public interface BookRepository extends JpaRepository<Book, Long> {
 
     Optional<Book> findFirstByAuthor(String author);
 
     Optional<Book> findFirstByIsbn(Long isbn);
 
-    List<Book> findByPublisherAndYearAndGenre(String publisher, String year, String genre);
+    Page<Book> findByPublisherAndYearAndGenre(String publisher, String year, String genre, Pageable pageable);
 
     @Query("SELECT b FROM Book b WHERE (:publisher is null or b.publisher = :publisher) and (:year is null"
             + " or b.year = :year) and (:genre is null or b.genre = :genre)")
-    List<Book> findBookByPublisherAndYearAndGenre(@Param("publisher") String publisher, @Param("year") String year,
-            @Param("genre") String genre);
+    Page<Book> findBookByPublisherAndYearAndGenre(@Param("publisher") String publisher, @Param("year") String year,
+            @Param("genre") String genre, Pageable pageable);
 
     @Query("SELECT b FROM Book b WHERE "
             + "(:publisher is null or publisher='' or b.publisher = :publisher)"
@@ -32,7 +33,7 @@ public interface BookRepository extends CrudRepository<Book, Long> {
             + " and (:subtitle is null or :subtitle='' or b.subtitle = :subtitle)"
             + " and (:pages is null or b.pages = :pages)"
     )
-    List<Book> findBooksBy(
+    Page<Book> findBooksBy(
             @Param("isbn") Long isbn,
             @Param("genre") String genre,
             @Param("author") String author,
@@ -41,7 +42,8 @@ public interface BookRepository extends CrudRepository<Book, Long> {
             @Param("subtitle") String subtitle,
             @Param("publisher") String publisher,
             @Param("year") String year,
-            @Param("pages") Integer pages
+            @Param("pages") Integer pages,
+            Pageable pageable
     );
 
 }
