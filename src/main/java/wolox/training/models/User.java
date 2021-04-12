@@ -41,6 +41,8 @@ public class User {
     @JsonSerialize(using = LocalDateSerializer.class)
     @ApiModelProperty(notes = "The date must be dd/MM/yyyy")
     private LocalDate birthdate;
+    @Column
+    private String password;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name = "book_user",
@@ -48,6 +50,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "user_id",
                     referencedColumnName = "id"))
     private List<Book> books = new ArrayList<>();
+
 
     public User() {
     }
@@ -91,6 +94,14 @@ public class User {
         this.books = checkNotNull(books);
     }
 
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
 
     /**
      * The book is added if it exists and if the user doesn't already have it

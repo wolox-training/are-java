@@ -21,6 +21,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import wolox.training.exceptions.IdNotFoundException;
 import wolox.training.exceptions.NullFieldException;
@@ -29,6 +30,7 @@ import wolox.training.repositories.BookRepository;
 import wolox.training.validators.BookValidator;
 
 @WebMvcTest(controllers = BookController.class)
+@ActiveProfiles("test")
 public class BookControllerTests {
 
     private static Book book1;
@@ -43,9 +45,10 @@ public class BookControllerTests {
     @MockBean
     private BookValidator bookValidator;
 
+
     @BeforeAll
     static void setUp() throws JsonProcessingException {
-        objectMapper=new ObjectMapper();
+        objectMapper = new ObjectMapper();
         basicUrl = "/api/books/";
 
         bookWithVariableYearJsonString = "{ "
@@ -199,7 +202,7 @@ public class BookControllerTests {
     @Test
     void whenDeleteABookWhichExists_thenItReturnsOk() throws Exception {
         doNothing().when(bookRepository).deleteById(any());
-        doNothing().when(bookValidator).existsId(any());
+        Mockito.when(bookValidator.existsId(any(Long.class))).thenReturn(book1);
         mvc.perform(delete(basicUrl + "1").contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 
@@ -214,7 +217,7 @@ public class BookControllerTests {
 
     @Test
     void whenUpdateABookWhichExistsWithCorrectFields_thenItReturnsOk() throws Exception {
-        doNothing().when(bookValidator).idsMatchAndExist(any(Book.class), any(Long.class));
+        Mockito.when(bookValidator.idsMatchAndExist(any(Book.class), any(Long.class))).thenReturn(book1);
         Mockito.when(bookRepository.save(any(Book.class))).thenReturn(book1);
         mvc.perform(put(basicUrl + "1").contentType(MediaType.APPLICATION_JSON).content(bookJsonString))
                 .andExpect(status().isOk());
