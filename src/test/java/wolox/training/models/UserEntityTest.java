@@ -19,7 +19,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.test.context.junit4.SpringRunner;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookNeverOwnedException;
-import wolox.training.models.UtilsForTest.UsersForTest;
+import wolox.training.models.UtilsForTest.DifferentTypeOfUsersForTest;
 import wolox.training.repositories.BookRepository;
 import wolox.training.repositories.UserRepository;
 
@@ -146,17 +146,17 @@ public class UserEntityTest {
         return users.stream().filter(
                 user -> (to == null || user.getBirthdate().isBefore(to) || user.getBirthdate().equals(to))
                         && (from == null || user.getBirthdate().isAfter(from) || user.getBirthdate().equals(from))
-                        && (partOfTheName == null || user.getUsername().toLowerCase()
+                        && (partOfTheName == null || user.getName().toLowerCase()
                         .contains(partOfTheName.toLowerCase()))
         ).collect(Collectors.toList());
     }
 
     @Test
     void whenSearchingForUsersByDatesAndName_thenItRetrievesUsersUnderThoseConditions() {
-        UsersForTest usersForTest = new UsersForTest();
+        DifferentTypeOfUsersForTest usersForTest = new DifferentTypeOfUsersForTest();
         List<User> users = usersForTest.usersList();
-        LocalDate from = LocalDate.of(1979, 9, 19);
-        LocalDate to = LocalDate.of(1981, 2, 13);
+        LocalDate from = LocalDate.of(1700, 6, 28);
+        LocalDate to = LocalDate.of(1959, 11, 3);
         String partOfName = "H";
         users.forEach(user -> userRepository.save(user));
         Pageable pageable = PageRequest.of(0, 100);
@@ -170,7 +170,7 @@ public class UserEntityTest {
 
     @Test
     void whenSearchingForUsersByPartOfTheirNameWithNullFieldsDateFromAndDateTo_thenItRetrievesThem() {
-        UsersForTest usersForTest = new UsersForTest();
+        DifferentTypeOfUsersForTest usersForTest = new DifferentTypeOfUsersForTest();
         List<User> users = usersForTest.usersList();
         String partOfName = "A";
         users.forEach(user -> userRepository.save(user));
@@ -184,9 +184,9 @@ public class UserEntityTest {
 
     @Test
     void whenSearchingForUsersByBirthdayBeforeADateWithNullFieldsDateFromAndPartOfTheirName_thenItRetrievesThem() {
-        UsersForTest usersForTest = new UsersForTest();
+        DifferentTypeOfUsersForTest usersForTest = new DifferentTypeOfUsersForTest();
         List<User> users = usersForTest.usersList();
-        LocalDate to = LocalDate.of(1981, 2, 13);
+        LocalDate to = LocalDate.of(1959, 11, 3);
         users.forEach(user -> userRepository.save(user));
         Pageable pageable = PageRequest.of(0, 100);
         List<User> resultQuery = userRepository
@@ -198,9 +198,9 @@ public class UserEntityTest {
 
     @Test
     void whenSearchingForUsersByBirthdayAfterADateWithNullFieldsDateToAndPartOfTheirName_thenItRetrievesThem() {
-        UsersForTest usersForTest = new UsersForTest();
+        DifferentTypeOfUsersForTest usersForTest = new DifferentTypeOfUsersForTest();
         List<User> users = usersForTest.usersList();
-        LocalDate from = LocalDate.of(1981, 2, 13);
+        LocalDate from =LocalDate.of(1700, 6, 28);
         users.forEach(user -> userRepository.save(user));
         Pageable pageable = PageRequest.of(0, 100);
         List<User> resultQuery = userRepository

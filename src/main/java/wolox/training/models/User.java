@@ -15,27 +15,41 @@ import java.util.Collections;
 import java.util.List;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
+import javax.persistence.DiscriminatorColumn;
+import javax.persistence.DiscriminatorType;
+import javax.persistence.DiscriminatorValue;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.Transient;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import wolox.training.exceptions.BookAlreadyOwnedException;
 import wolox.training.exceptions.BookNeverOwnedException;
 
 @Getter
 @Entity(name = "USERS")
-@NoArgsConstructor
+@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@DiscriminatorColumn(name = "type_of_user", discriminatorType = DiscriminatorType.STRING)
+@DiscriminatorValue("User")
 public class User {
+
+    public User() {
+        typeOfUser = getClass().getAnnotation(DiscriminatorValue.class).value();
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+    @Transient
+    protected String typeOfUser;
+
     @Column(nullable = false)
     private String username;
     @Column(nullable = false)
